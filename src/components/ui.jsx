@@ -4,19 +4,20 @@ import { ArrowUpRight, Plus } from 'lucide-react';
 
 export const wrap = 'max-w-6xl mx-auto px-5 sm:px-8';
 export const btnPrimary =
-  'group inline-flex items-center justify-center gap-2 rounded-full bg-navy-900 px-6 py-3.5 text-sm font-semibold text-white transition duration-300 hover:bg-navy-800 hover:-translate-y-0.5 active:scale-95';
+  'group inline-flex items-center justify-center gap-2 rounded-full bg-navy-900 px-6 py-3.5 text-sm font-semibold text-white transition-[background-color,border-color,transform] duration-200 ease-out-strong hover:bg-navy-800 hover:-translate-y-0.5 active:scale-[0.97] active:duration-100';
 export const btnGold =
-  'group inline-flex items-center justify-center gap-2 rounded-full bg-accent-500 px-6 py-3.5 text-sm font-semibold text-white transition duration-300 hover:bg-accent-600 hover:-translate-y-0.5 active:scale-95';
+  'group inline-flex items-center justify-center gap-2 rounded-full bg-accent-500 px-6 py-3.5 text-sm font-semibold text-white transition-[background-color,border-color,transform] duration-200 ease-out-strong hover:bg-accent-600 hover:-translate-y-0.5 active:scale-[0.97] active:duration-100';
 export const btnGhost =
-  'group inline-flex items-center justify-center gap-2 rounded-full border border-navy-900/20 px-6 py-3.5 text-sm font-semibold text-navy-900 transition duration-300 hover:border-navy-900 hover:-translate-y-0.5 active:scale-95';
+  'group inline-flex items-center justify-center gap-2 rounded-full border border-navy-900/20 px-6 py-3.5 text-sm font-semibold text-navy-900 transition-[background-color,border-color,transform] duration-200 ease-out-strong hover:border-navy-900 hover:-translate-y-0.5 active:scale-[0.97] active:duration-100';
 export const inputCls =
-  'w-full rounded-xl border border-navy-900/15 bg-white px-4 py-3 text-sm outline-none transition focus:border-navy-900 focus:ring-4 focus:ring-accent-400/20';
+  'w-full rounded-xl border border-navy-900/15 bg-white px-4 py-3 text-base md:text-sm outline-none transition-[border-color,box-shadow] duration-150 focus:border-navy-900 focus:ring-4 focus:ring-accent-400/20';
 
 /* Fades + slides children in once they scroll into view */
-export function Reveal({ children, delay = 0, as: Tag = 'div', className = '' }) {
+export function Reveal({ children, delay = 0, disabled = false, as: Tag = 'div', className = '' }) {
   const ref = useRef(null);
   const [shown, setShown] = useState(false);
   useEffect(() => {
+    if (disabled) return;
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -30,16 +31,25 @@ export function Reveal({ children, delay = 0, as: Tag = 'div', className = '' })
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [disabled]);
+
+  if (disabled) {
+    return <Tag className={className}>{children}</Tag>;
+  }
+
   return (
-    <Tag ref={ref} style={{ transitionDelay: `${delay}ms` }} className={`reveal ${shown ? 'in' : ''} ${className}`}>
+    <Tag
+      ref={ref}
+      style={{ '--reveal-delay': `${Math.min(delay, 180)}ms` }}
+      className={`reveal ${shown ? 'in' : ''} ${className}`}
+    >
       {children}
     </Tag>
   );
 }
 
 /* "100%" -> counts 0 -> 100 and keeps the % */
-export function CountUp({ value, duration = 1400 }) {
+export function CountUp({ value, duration = 900 }) {
   const m = String(value).match(/^(\D*)([\d.,]+)(.*)$/);
   const target = m ? parseFloat(m[2].replace(/,/g, '')) : 0;
   const ref = useRef(null);
@@ -63,10 +73,10 @@ export function CountUp({ value, duration = 1400 }) {
     });
     io.observe(ref.current);
     return () => io.disconnect();
-  }, [target]);
-  if (!m) return <span>{value}</span>;
+  }, [target, duration]);
+  if (!m) return <span className="tabular-nums">{value}</span>;
   return (
-    <span ref={ref}>
+    <span ref={ref} className="inline-block min-w-[3ch] tabular-nums">
       {m[1]}
       {Math.round(n)}
       {m[3]}
@@ -81,7 +91,7 @@ export function PageHero({ title, children }) {
       <div className={`${wrap} pt-10 pb-10 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20`}>
         <h1 className="rise font-serif text-3xl sm:text-5xl lg:text-6xl leading-[1.08] tracking-tight text-navy-950 max-w-4xl">{title}</h1>
         {children && (
-          <p className="rise mt-4 sm:mt-6 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600" style={{ animationDelay: '150ms' }}>
+          <p className="rise mt-4 sm:mt-6 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600" style={{ animationDelay: '60ms' }}>
             {children}
           </p>
         )}
@@ -95,7 +105,7 @@ export function More({ to, href, children }) {
   const inner = (
     <>
       <span className="u-link">{children}</span>
-      <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+      <ArrowUpRight className="h-4 w-4 transition-transform duration-200 ease-out-strong group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
     </>
   );
   return href ? (
@@ -121,10 +131,13 @@ export function Accordion({ items, defaultOpen = 0 }) {
               aria-expanded={isOpen}
             >
               <span className="font-serif text-lg sm:text-xl text-navy-950">{it.question}</span>
-              <Plus className={`h-5 w-5 flex-shrink-0 text-accent-600 transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`} />
+              <Plus className={`h-5 w-5 flex-shrink-0 text-accent-600 transition-transform duration-[250ms] ease-out-strong ${isOpen ? 'rotate-45' : ''}`} />
             </button>
-            <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-              <div className="overflow-hidden">
+            <div
+              {...(isOpen ? {} : { inert: '' })}
+              className={`grid transition-[grid-template-rows] duration-[250ms] ease-out-strong ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+            >
+              <div className={`overflow-hidden transition-opacity duration-200 ease-out-strong ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
                 <p className="max-w-3xl pb-6 leading-relaxed text-slate-600">{it.answer}</p>
               </div>
             </div>
