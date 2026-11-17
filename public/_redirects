@@ -1,0 +1,53 @@
+# Legacy WordPress 301 Redirects for Finamoat SEO Migration
+/about-us                     /about                              301
+/about-us/                    /about                              301
+/services/                    /services                           301
+/business-learnings           /insights                           301
+/business-learnings/          /insights                           301
+/contact-us                   /contact                            301
+/contact-us/                  /contact                            301
+/apply-now                    /check-up                           301
+/apply-now/                   /check-up                           301
+/1880-2                       /subscribe                          301
+/1880-2/                      /subscribe                          301
+/category/case-studies        /case-studies                       301
+/category/case-studies/       /case-studies                       301
+/category/best-business-practices         /insights               301
+/category/best-business-practices/        /insights               301
+/category/best-business-practices/page/2  /insights               301
+/category/best-business-practices/page/2/ /insights               301
+/author/finamoat              /about#leadership                   301
+/author/finamoat/             /about#leadership                   301
+
+# Case Studies
+/case-study-1                 /case-studies/business-scalability  301
+/case-study-1/                /case-studies/business-scalability  301
+/case-study-2                 /case-studies/daksh-it-consulting   301
+/case-study-2/                /case-studies/daksh-it-consulting   301
+
+# Consolidate duplicate article into canonical post
+/which-type-of-constitution-will-suit-your-business   /insights/why-business-fail  301
+/which-type-of-constitution-will-suit-your-business/  /insights/why-business-fail  301
+
+# Blog Article Legacy Slugs -> Clean /insights/:slug
+/vehicle-without-dashboard                  /insights/vehicle-without-dashboard                 301
+/vehicle-without-dashboard/                 /insights/vehicle-without-dashboard                 301
+/role-of-shared-cfo                         /insights/role-of-shared-cfo                        301
+/role-of-shared-cfo/                        /insights/role-of-shared-cfo                        301
+/how-to-accumulate-wealth                   /insights/how-to-accumulate-wealth                  301
+/how-to-accumulate-wealth/                  /insights/how-to-accumulate-wealth                  301
+/cash-is-king                               /insights/cash-is-king                              301
+/cash-is-king/                              /insights/cash-is-king                              301
+/sustainable-business                       /insights/sustainable-business                      301
+/sustainable-business/                      /insights/sustainable-business                      301
+/lockdown-impact                            /insights/lockdown-impact                           301
+/lockdown-impact/                           /insights/lockdown-impact                           301
+/love-your-vocation                         /insights/love-your-vocation                        301
+/love-your-vocation/                        /insights/love-your-vocation                        301
+/warrior-mindset-of-an-entrepreneur         /insights/warrior-mindset-of-an-entrepreneur        301
+/warrior-mindset-of-an-entrepreneur/        /insights/warrior-mindset-of-an-entrepreneur        301
+/why-business-fail                          /insights/why-business-fail                         301
+/why-business-fail/                         /insights/why-business-fail                         301
+
+# SPA Fallback
+/*                            /index.html                         200

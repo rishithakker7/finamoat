@@ -1,0 +1,29 @@
+{
+  "redirects": [
+    { "source": "/about-us", "destination": "/about", "permanent": true },
+    { "source": "/about-us/", "destination": "/about", "permanent": true },
+    { "source": "/business-learnings", "destination": "/insights", "permanent": true },
+    { "source": "/business-learnings/", "destination": "/insights", "permanent": true },
+    { "source": "/contact-us", "destination": "/contact", "permanent": true },
+    { "source": "/contact-us/", "destination": "/contact", "permanent": true },
+    { "source": "/apply-now", "destination": "/check-up", "permanent": true },
+    { "source": "/apply-now/", "destination": "/check-up", "permanent": true },
+    { "source": "/1880-2", "destination": "/subscribe", "permanent": true },
+    { "source": "/1880-2/", "destination": "/subscribe", "permanent": true },
+    { "source": "/case-study-1", "destination": "/case-studies/business-scalability", "permanent": true },
+    { "source": "/case-study-2", "destination": "/case-studies/daksh-it-consulting", "permanent": true },
+    { "source": "/which-type-of-constitution-will-suit-your-business", "destination": "/insights/why-business-fail", "permanent": true },
+    { "source": "/vehicle-without-dashboard", "destination": "/insights/vehicle-without-dashboard", "permanent": true },
+    { "source": "/role-of-shared-cfo", "destination": "/insights/role-of-shared-cfo", "permanent": true },
+    { "source": "/how-to-accumulate-wealth", "destination": "/insights/how-to-accumulate-wealth", "permanent": true },
+    { "source": "/cash-is-king", "destination": "/insights/cash-is-king", "permanent": true },
+    { "source": "/sustainable-business", "destination": "/insights/sustainable-business", "permanent": true },
+    { "source": "/lockdown-impact", "destination": "/insights/lockdown-impact", "permanent": true },
+    { "source": "/love-your-vocation", "destination": "/insights/love-your-vocation", "permanent": true },
+    { "source": "/warrior-mindset-of-an-entrepreneur", "destination": "/insights/warrior-mindset-of-an-entrepreneur", "permanent": true },
+    { "source": "/why-business-fail", "destination": "/insights/why-business-fail", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
