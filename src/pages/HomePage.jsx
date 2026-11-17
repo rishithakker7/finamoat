@@ -537,7 +537,7 @@ function Knight() {
           </div>
         ) : (
           <span className="rounded-full bg-sand-100/95 border border-navy-900/10 px-3 py-1 text-[11px] font-medium text-slate-500">
-            Drag orbit or tap knight to explore
+            Drag orb or tap knight to explore
           </span>
         )}
       </div>
