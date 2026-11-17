@@ -64,38 +64,43 @@ const ORBIT_NODES = [
 function Knight() {
   const stageRef = useRef(null);
   const knightWrapRef = useRef(null);
-  const outerRingRef = useRef(null);
-  const innerRingRef = useRef(null);
   const glowRef = useRef(null);
-  const nodeRefs = useRef([]);
+  const nodeWrapRefs = useRef([]);
+  const pillRefs = useRef([]);
+  const pillSideRef = useRef([]);
   const lineRef = useRef(null);
+  const activeIdxRef = useRef(null);
+  const renderFrameRef = useRef(null);
+
+  const stageRectRef = useRef({ left: 0, top: 0, width: 320, height: 320 });
 
   const [activeIdx, setActiveIdx] = useState(null);
   const [ripples, setRipples] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Mutable physics state for 60fps requestAnimationFrame loop
   const phys = useRef({
     outerAngle: 0,
     innerAngle: 0,
-    angularVel: 0.18, // base orbital speed (deg/frame)
-    targetX: 0, // normalized -0.5 .. 0.5
+    angularVel: 0.16,
+    targetX: 0,
     targetY: 0,
     curX: 0,
     curY: 0,
     pointerActive: false,
     dragging: false,
     lastPointerAngle: null,
-    paused: false,
     bounce: 0,
+    reducedMotion: false,
   });
 
+  // Sync activeIdx to ref and close on outside click / Escape
   useEffect(() => {
-    phys.current.paused = activeIdx !== null;
+    activeIdxRef.current = activeIdx;
+    if (renderFrameRef.current) renderFrameRef.current(performance.now(), true);
+
     if (activeIdx === null) return;
 
     const onOutsideClick = (e) => {
-      // Close the popup whenever clicking/tapping anywhere outside a node, knight, or HUD card
       if (!e.target.closest('[data-orbit-interactive]')) {
         setActiveIdx(null);
       }
@@ -112,85 +117,185 @@ function Knight() {
     };
   }, [activeIdx]);
 
+  // Single lifecycle effect: ResizeObserver + IntersectionObserver + visibilitychange + frame-rate-independent rAF
   useEffect(() => {
-    let rafId;
-    const tick = () => {
+    const stageEl = stageRef.current;
+    if (!stageEl) return;
+
+    const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+    phys.current.reducedMotion = mql.matches;
+
+    let rafId = null;
+    let inView = true;
+    let docVisible = document.visibilityState === 'visible';
+    let lastTime = performance.now();
+
+    const updateStageRect = () => {
+      if (!stageRef.current) return;
+      const r = stageRef.current.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) {
+        stageRectRef.current = {
+          left: r.left,
+          top: r.top,
+          width: r.width,
+          height: r.height,
+        };
+      }
+    };
+
+    const drawPositions = (now, staticOnly = false) => {
       const p = phys.current;
+      const { width: w, height: h } = stageRectRef.current;
 
-      // Smooth spring interpolation for 3D tilt & parallax
-      p.curX += (p.targetX - p.curX) * 0.12;
-      p.curY += (p.targetY - p.curY) * 0.12;
-      p.bounce *= 0.88;
+      if (!staticOnly && !p.reducedMotion) {
+        const dt = Math.min(50, Math.max(0, now - lastTime));
+        const k = dt / 16.667;
 
-      // Decay angular velocity smoothly back toward base speed
-      const baseSpeed = p.paused ? 0.03 : p.pointerActive ? 0.32 : 0.16;
-      if (!p.dragging) {
-        p.angularVel += (baseSpeed - p.angularVel) * 0.04;
+        const tiltLerp = 1 - Math.pow(1 - 0.12, k);
+        p.curX += (p.targetX - p.curX) * tiltLerp;
+        p.curY += (p.targetY - p.curY) * tiltLerp;
+        p.bounce *= Math.pow(0.88, k);
+
+        const paused = activeIdxRef.current !== null;
+        const baseSpeed = paused ? 0.03 : p.pointerActive ? 0.32 : 0.16;
+        if (!p.dragging) {
+          const velLerp = 1 - Math.pow(1 - 0.04, k);
+          p.angularVel += (baseSpeed - p.angularVel) * velLerp;
+        }
+
+        p.outerAngle = (p.outerAngle + p.angularVel * k) % 360;
+        p.innerAngle = (p.innerAngle - p.angularVel * 1.35 * k) % 360;
+      } else if (p.reducedMotion) {
+        p.curX = 0;
+        p.curY = 0;
+        p.bounce = 0;
       }
 
-      p.outerAngle = (p.outerAngle + p.angularVel) % 360;
-      p.innerAngle = (p.innerAngle - p.angularVel * 1.35) % 360;
+      lastTime = now;
 
-      // Apply 3D parallax transforms to rings & knight
-      if (outerRingRef.current) {
-        outerRingRef.current.style.transform = `translate3d(${p.curX * -14}px, ${p.curY * -14}px, 0) rotateX(${-p.curY * 16}deg) rotateY(${p.curX * 16}deg)`;
-      }
-      if (innerRingRef.current) {
-        innerRingRef.current.style.transform = `translate3d(${p.curX * -24}px, ${p.curY * -24}px, 0) rotateX(${-p.curY * 20}deg) rotateY(${p.curX * 20}deg)`;
-      }
       if (knightWrapRef.current) {
-        const scale = 1 + p.bounce * 0.12;
-        knightWrapRef.current.style.transform = `perspective(900px) translate3d(${p.curX * 22}px, ${p.curY * 22}px, 30px) rotateY(${p.curX * 24}deg) rotateX(${-p.curY * 24}deg) scale(${scale})`;
+        if (p.reducedMotion) {
+          knightWrapRef.current.style.transform = 'none';
+        } else {
+          const scale = 1 + p.bounce * 0.12;
+          knightWrapRef.current.style.transform = `perspective(900px) translate3d(${p.curX * 20}px, ${p.curY * 20}px, 0) rotateY(${p.curX * 22}deg) rotateX(${-p.curY * 22}deg) scale(${scale})`;
+        }
       }
+
       if (glowRef.current) {
-        glowRef.current.style.transform = `translate3d(${p.curX * 45}px, ${p.curY * 45}px, 0)`;
+        glowRef.current.style.transform = p.reducedMotion
+          ? 'none'
+          : `translate3d(${p.curX * 36}px, ${p.curY * 36}px, 0)`;
       }
 
-      // Position each orbital node along its circle
+      const sel = activeIdxRef.current;
+
       ORBIT_NODES.forEach((node, i) => {
-        const el = nodeRefs.current[i];
-        if (!el) return;
+        const wrapEl = nodeWrapRefs.current[i];
+        if (!wrapEl) return;
+
         const deg =
-          node.baseAngle + (node.ring === 'outer' ? p.outerAngle : p.innerAngle);
+          node.baseAngle +
+          (p.reducedMotion ? 0 : node.ring === 'outer' ? p.outerAngle : p.innerAngle);
         const rad = (deg * Math.PI) / 180;
-        const radiusPct = node.ring === 'outer' ? 42 : 29; // matches inset-[8%] (42% radius) & inset-[21%] (29% radius) so top never clips
-        const parallaxX = node.ring === 'outer' ? p.curX * -12 : p.curX * -20;
-        const parallaxY = node.ring === 'outer' ? p.curY * -12 : p.curY * -20;
+        const radiusRatio = node.ring === 'outer' ? 0.42 : 0.29;
+        const parallaxX = p.reducedMotion ? 0 : node.ring === 'outer' ? p.curX * -10 : p.curX * -16;
+        const parallaxY = p.reducedMotion ? 0 : node.ring === 'outer' ? p.curY * -10 : p.curY * -16;
 
-        const xPct = 50 + Math.cos(rad) * radiusPct;
-        const yPct = 50 + Math.sin(rad) * radiusPct;
+        const xPx = w * (0.5 + Math.cos(rad) * radiusRatio) + parallaxX;
+        const yPx = h * (0.5 + Math.sin(rad) * radiusRatio) + parallaxY;
 
-        el.style.left = `calc(${xPct}% + ${parallaxX}px)`;
-        el.style.top = `calc(${yPct}% + ${parallaxY}px)`;
+        wrapEl.style.transform = `translate3d(${xPx}px, ${yPx}px, 0)`;
 
-        // Flip floating pill label below the dot when the dot is near the top edge
-        const pill = el.querySelector('[data-node-pill]');
+        const pill = pillRefs.current[i];
         if (pill) {
-          if (yPct < 24) {
-            pill.style.top = '1.75rem';
-          } else {
-            pill.style.top = '-1.85rem';
+          const nextSide = yPx < h * 0.24 ? 'below' : 'above';
+          if (pillSideRef.current[i] !== nextSide) {
+            pillSideRef.current[i] = nextSide;
+            pill.style.top = nextSide === 'below' ? '1.75rem' : '-1.85rem';
           }
         }
 
-        // If this node is active, update the SVG tether line from center to node
-        if (activeIdx === i && lineRef.current) {
-          lineRef.current.setAttribute('x1', `${50 + p.curX * 4}%`);
-          lineRef.current.setAttribute('y1', `${50 + p.curY * 4}%`);
-          lineRef.current.setAttribute('x2', `${xPct}%`);
-          lineRef.current.setAttribute('y2', `${yPct}%`);
+        if (sel === i && lineRef.current) {
+          const cx = w * 0.5 + (p.reducedMotion ? 0 : p.curX * 16);
+          const cy = h * 0.5 + (p.reducedMotion ? 0 : p.curY * 16);
+          lineRef.current.setAttribute('x1', `${cx}`);
+          lineRef.current.setAttribute('y1', `${cy}`);
+          lineRef.current.setAttribute('x2', `${xPx}`);
+          lineRef.current.setAttribute('y2', `${yPx}`);
         }
       });
-
-      rafId = requestAnimationFrame(tick);
     };
 
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
-  }, [activeIdx]);
+    renderFrameRef.current = drawPositions;
+
+    const loop = (now) => {
+      drawPositions(now, false);
+      if (inView && docVisible && !phys.current.reducedMotion) {
+        rafId = requestAnimationFrame(loop);
+      } else {
+        rafId = null;
+      }
+    };
+
+    const syncLoop = () => {
+      if (inView && docVisible && !phys.current.reducedMotion) {
+        if (rafId === null) {
+          lastTime = performance.now();
+          rafId = requestAnimationFrame(loop);
+        }
+      } else {
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+        drawPositions(performance.now(), true);
+      }
+    };
+
+    updateStageRect();
+    drawPositions(performance.now(), true);
+    syncLoop();
+
+    const ro = new ResizeObserver(() => {
+      updateStageRect();
+      drawPositions(performance.now(), true);
+    });
+    ro.observe(stageEl);
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        syncLoop();
+      },
+      { threshold: 0 }
+    );
+    io.observe(stageEl);
+
+    const onVisChange = () => {
+      docVisible = document.visibilityState === 'visible';
+      syncLoop();
+    };
+
+    const onMqlChange = (e) => {
+      phys.current.reducedMotion = e.matches;
+      syncLoop();
+    };
+
+    document.addEventListener('visibilitychange', onVisChange);
+    mql.addEventListener('change', onMqlChange);
+
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      ro.disconnect();
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVisChange);
+      mql.removeEventListener('change', onMqlChange);
+    };
+  }, []);
 
   const getPointerAngleAndCoords = (clientX, clientY) => {
-    const r = stageRef.current.getBoundingClientRect();
+    const r = stageRectRef.current;
     const nx = (clientX - r.left) / r.width - 0.5;
     const ny = (clientY - r.top) / r.height - 0.5;
     const angle = (Math.atan2(ny, nx) * 180) / Math.PI;
@@ -199,9 +304,14 @@ function Knight() {
 
   const handlePointerDown = (e) => {
     if (!stageRef.current) return;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    const { nx, ny, angle } = getPointerAngleAndCoords(clientX, clientY);
+    const r = stageRef.current.getBoundingClientRect();
+    stageRectRef.current = { left: r.left, top: r.top, width: r.width, height: r.height };
+
+    if (!e.target.closest('button') && !e.target.closest('[data-knight-core]')) {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    }
+
+    const { nx, ny, angle } = getPointerAngleAndCoords(e.clientX, e.clientY);
     phys.current.dragging = true;
     phys.current.pointerActive = true;
     phys.current.targetX = nx;
@@ -211,10 +321,8 @@ function Knight() {
   };
 
   const handlePointerMove = (e) => {
-    if (!stageRef.current) return;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    const { nx, ny, angle } = getPointerAngleAndCoords(clientX, clientY);
+    if (!stageRef.current || phys.current.reducedMotion) return;
+    const { nx, ny, angle } = getPointerAngleAndCoords(e.clientX, e.clientY);
     phys.current.pointerActive = true;
     phys.current.targetX = Math.max(-0.6, Math.min(0.6, nx));
     phys.current.targetY = Math.max(-0.6, Math.min(0.6, ny));
@@ -228,7 +336,10 @@ function Knight() {
     }
   };
 
-  const handlePointerLeaveOrUp = () => {
+  const handlePointerUpOrCancel = (e) => {
+    if (e?.currentTarget?.hasPointerCapture?.(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
     phys.current.dragging = false;
     phys.current.pointerActive = false;
     phys.current.targetX = 0;
@@ -238,14 +349,15 @@ function Knight() {
   };
 
   const triggerPulse = () => {
-    phys.current.bounce = 1;
-    phys.current.angularVel = phys.current.angularVel >= 0 ? 2.4 : -2.4;
-    const id = Date.now() + Math.random();
-    setRipples((prev) => [...prev.slice(-2), id]);
-    setTimeout(() => {
-      setRipples((prev) => prev.filter((r) => r !== id));
-    }, 1100);
-    // Cycle through the 4 orbital pillars on click/tap
+    if (!phys.current.reducedMotion) {
+      phys.current.bounce = 1;
+      phys.current.angularVel = phys.current.angularVel >= 0 ? 2.2 : -2.2;
+      const id = Date.now() + Math.random();
+      setRipples((prev) => [...prev.slice(-2), id]);
+      setTimeout(() => {
+        setRipples((prev) => prev.filter((r) => r !== id));
+      }, 900);
+    }
     setActiveIdx((prev) => (prev === null ? 0 : (prev + 1) % ORBIT_NODES.length));
   };
 
@@ -254,45 +366,38 @@ function Knight() {
   return (
     <div
       ref={stageRef}
-      onMouseDown={handlePointerDown}
-      onMouseMove={handlePointerMove}
-      onMouseUp={handlePointerLeaveOrUp}
-      onMouseLeave={handlePointerLeaveOrUp}
-      onTouchStart={handlePointerDown}
-      onTouchMove={handlePointerMove}
-      onTouchEnd={handlePointerLeaveOrUp}
-      className={`relative aspect-square w-[min(74vw,270px)] sm:w-[320px] md:w-[360px] lg:w-[min(38vw,440px)] xl:w-[500px] flex-shrink-0 select-none touch-none ${
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUpOrCancel}
+      onPointerCancel={handlePointerUpOrCancel}
+      onPointerLeave={handlePointerUpOrCancel}
+      className={`relative aspect-square w-[min(74vw,270px)] sm:w-[320px] md:w-[360px] lg:w-[min(38vw,440px)] xl:w-[500px] flex-shrink-0 select-none touch-pan-y ${
         isDragging ? 'cursor-grabbing' : 'cursor-grab'
       }`}
       aria-label="Interactive Orbital Growth Graphic — Drag to spin, tap knight or nodes to inspect metrics"
     >
-      {/* Interactive Magnetic Glow */}
+      {/* Pure Radial-Gradient Magnetic Glow (No filter blur) */}
       <div
         ref={glowRef}
-        className="pointer-events-none absolute inset-[22%] rounded-full bg-gradient-to-tr from-accent-500/10 via-amber-400/10 to-navy-900/5 blur-2xl transition-opacity duration-300"
+        className="pointer-events-none absolute inset-[12%] rounded-full"
+        style={{
+          background:
+            'radial-gradient(circle, rgba(216,51,42,0.11) 0%, rgba(251,191,36,0.06) 42%, rgba(11,31,59,0) 70%)',
+        }}
       />
 
-      {/* Outer Ring (inset-[8%] ensures top ring, nodes, and pills never clip on mobile) */}
-      <div
-        ref={outerRingRef}
-        className="pointer-events-none absolute inset-[8%] rounded-full border border-navy-900/15 transition-colors duration-300"
-      />
+      {/* Outer Ring */}
+      <div className="pointer-events-none absolute inset-[8%] rounded-full border border-navy-900/15" />
 
       {/* Inner Ring */}
-      <div
-        ref={innerRingRef}
-        className="pointer-events-none absolute inset-[21%] rounded-full border border-navy-900/15 border-dashed transition-colors duration-300"
-      />
+      <div className="pointer-events-none absolute inset-[21%] rounded-full border border-navy-900/15 border-dashed" />
 
-      {/* Ambient Core Moat Ring */}
-      <div className="pointer-events-none absolute inset-[32%] rounded-full bg-accent-500/5 pulse-ring" />
-
-      {/* Click / Tap Shockwave Ripples */}
+      {/* Click / Tap Shockwave Ripples (Skipped in reduced-motion) */}
       {ripples.map((id) => (
         <span
           key={id}
           className="pointer-events-none absolute inset-[32%] rounded-full border-2 border-accent-500/50 animate-ping"
-          style={{ animationDuration: '1.1s' }}
+          style={{ animationDuration: '900ms' }}
         />
       ))}
 
@@ -316,58 +421,68 @@ function Knight() {
         )}
       </svg>
 
-      {/* 4 Interactive Orbiting Pillar Nodes */}
+      {/* 4 Interactive Orbiting Pillar Nodes (Moved via translate3d on wrapper div) */}
       {ORBIT_NODES.map((node, i) => {
         const isSelected = activeIdx === i;
         return (
-          <button
+          <div
             key={node.id}
-            data-orbit-interactive="true"
-            ref={(el) => (nodeRefs.current[i] = el)}
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              phys.current.bounce = 0.65;
-              setActiveIdx(isSelected ? null : i);
-            }}
-            onMouseEnter={() => setActiveIdx(i)}
-            aria-label={`${node.metric}: ${node.title}`}
-            className={`group absolute -translate-x-1/2 -translate-y-1/2 rounded-full transition-transform duration-200 focus:outline-none ${
-              isSelected ? 'z-30 scale-125' : 'z-20 hover:scale-125'
+            ref={(el) => (nodeWrapRefs.current[i] = el)}
+            className={`absolute left-0 top-0 will-change-transform ${
+              isSelected ? 'z-30' : 'z-20'
             }`}
           >
-            <span
-              className={`flex items-center justify-center rounded-full shadow-md ring-4 transition-all ${
-                node.color
-              } ${node.ringColor} ${
-                isSelected
-                  ? 'h-5 w-5 lg:h-6 lg:w-6 ring-8'
-                  : 'h-3.5 w-3.5 lg:h-4 lg:w-4'
+            <button
+              data-orbit-interactive="true"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!phys.current.reducedMotion) phys.current.bounce = 0.65;
+                setActiveIdx(isSelected ? null : i);
+              }}
+              onPointerEnter={(e) => {
+                if (e.pointerType === 'mouse') setActiveIdx(i);
+              }}
+              aria-label={`${node.metric}: ${node.title}`}
+              className={`group relative -translate-x-1/2 -translate-y-1/2 rounded-full transition-transform duration-200 ease-out-strong focus:outline-none active:scale-95 ${
+                isSelected ? 'scale-125' : 'hover:scale-125'
               }`}
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-white/90" />
-            </span>
-            {/* Subtle Floating Pill Label next to Node */}
-            <span
-              data-node-pill="true"
-              className={`pointer-events-none absolute left-1/2 -top-7 -translate-x-1/2 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide shadow-sm transition-all duration-200 ${
-                isSelected
-                  ? 'bg-navy-950 text-white opacity-100'
-                  : 'bg-white/90 text-navy-950 opacity-0 group-hover:opacity-100'
-              }`}
-            >
-              {node.metric}
-            </span>
-          </button>
+              <span
+                className={`flex items-center justify-center rounded-full shadow-md ring-4 transition-transform duration-200 ease-out-strong ${
+                  node.color
+                } ${node.ringColor} ${
+                  isSelected
+                    ? 'h-5 w-5 lg:h-6 lg:w-6 ring-8'
+                    : 'h-3.5 w-3.5 lg:h-4 lg:w-4'
+                }`}
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-white/90" />
+              </span>
+              {/* Subtle Floating Pill Label next to Node */}
+              <span
+                ref={(el) => (pillRefs.current[i] = el)}
+                style={{ top: '-1.85rem' }}
+                className={`pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide shadow-sm transition-opacity duration-150 ${
+                  isSelected
+                    ? 'bg-navy-950 text-white opacity-100'
+                    : 'bg-white/95 text-navy-950 opacity-0 group-hover:opacity-100'
+                }`}
+              >
+                {node.metric}
+              </span>
+            </button>
+          </div>
         );
       })}
 
-            {/* Center 3D Interactive Chess-Knight */}
+      {/* Center 3D Interactive Chess-Knight */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
         <div
           ref={knightWrapRef}
           data-orbit-interactive="true"
-          className="pointer-events-auto cursor-pointer select-none transition-transform duration-75 ease-out"
+          data-knight-core="true"
+          className="pointer-events-auto cursor-pointer select-none will-change-transform"
           onClick={(e) => {
             e.stopPropagation();
             triggerPulse();
@@ -379,22 +494,23 @@ function Knight() {
               src="/icon.png"
               alt="Finamoat Strategic Knight"
               draggable={false}
-              className="h-24 sm:h-32 md:h-36 lg:h-44 xl:h-52 w-auto mix-blend-multiply drop-shadow-sm select-none"
+              className="h-24 sm:h-32 md:h-36 lg:h-44 xl:h-52 w-auto drop-shadow-sm select-none"
             />
           </div>
         </div>
       </div>
 
-      {/* Interactive HUD Card (Appears when a node or the Knight is tapped/hovered) */}
-      <div className="pointer-events-none absolute inset-x-0 -bottom-2 sm:bottom-0 flex flex-col items-center z-30">
+      {/* Interactive HUD Card Container (Fixed min-height so swapping never jumps) */}
+      <div className="pointer-events-none absolute inset-x-0 -bottom-2 sm:bottom-0 flex min-h-[78px] flex-col items-center justify-end z-30">
         {activeNode ? (
           <div
+            key={activeNode.id}
             data-orbit-interactive="true"
             onClick={(e) => {
               e.stopPropagation();
               setActiveIdx(null);
             }}
-            className="pointer-events-auto cursor-pointer rounded-2xl border border-navy-900/15 bg-white/95 px-4 py-2.5 shadow-lg backdrop-blur-md text-center max-w-[260px] sm:max-w-[295px] transition-all"
+            className="hud-enter pointer-events-auto cursor-pointer rounded-2xl border border-navy-900/15 bg-white/95 px-4 py-2.5 shadow-lg text-center max-w-[260px] sm:max-w-[295px]"
           >
             <div className="text-xs sm:text-sm font-serif font-bold text-accent-600">
               {activeNode.metric}
@@ -407,7 +523,7 @@ function Knight() {
             </p>
           </div>
         ) : (
-          <span className="rounded-full bg-sand-100/90 border border-navy-900/10 px-3 py-1 text-[11px] font-medium text-slate-500 backdrop-blur-sm">
+          <span className="rounded-full bg-sand-100/95 border border-navy-900/10 px-3 py-1 text-[11px] font-medium text-slate-500">
             Drag orbit or tap knight to explore
           </span>
         )}
@@ -438,17 +554,17 @@ export default function HomePage() {
               </h1>
               <p
                 className="rise mt-5 sm:mt-7 max-w-xl text-base sm:text-xl leading-relaxed text-slate-600"
-                style={{ animationDelay: '150ms' }}
+                style={{ animationDelay: '70ms' }}
               >
                 {hero.subtitle}
               </p>
               <div
                 className="rise mt-8 sm:mt-10 flex flex-col items-stretch gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
-                style={{ animationDelay: '300ms' }}
+                style={{ animationDelay: '140ms' }}
               >
                 <Link to="/check-up" className={btnPrimary}>
                   Book a free finance check-up
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  <ArrowUpRight className="h-4 w-4 transition-transform duration-200 ease-out-strong group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </Link>
                 <span className="text-center text-xs sm:text-sm font-medium text-slate-400">
                   or
@@ -481,7 +597,7 @@ export default function HomePage() {
           {IMPACT_STATS.map((s, i) => (
             <Reveal
               key={i}
-              delay={i * 90}
+              delay={i * 60}
               className={`py-7 sm:py-10 lg:py-14 ${
                 i >= 2 ? 'border-t border-navy-900/10 lg:border-t-0' : ''
               } ${
@@ -515,7 +631,7 @@ export default function HomePage() {
               <More to="/about">Meet CA Vikram Menda & the team</More>
             </div>
           </Reveal>
-          <Reveal delay={120} className="lg:col-span-6">
+          <Reveal delay={60} className="lg:col-span-6">
             <ul className="divide-y divide-navy-900/10 border-y border-navy-900/10">
               {ABOUT_BULLETS.map((b, i) => (
                 <li key={i} className="flex gap-3.5 py-4 sm:gap-4 sm:py-5">
@@ -537,7 +653,7 @@ export default function HomePage() {
           </Reveal>
           <ul className="border-t border-navy-900/15">
             {CATEGORIES.map((c, i) => (
-              <Reveal as="li" key={c} delay={i * 70} className="border-b border-navy-900/15">
+              <Reveal as="li" key={c} delay={i * 60} className="border-b border-navy-900/15">
                 <Link
                   to="/services"
                   className="group grid gap-2 py-5 sm:py-7 hover-row md:grid-cols-12 md:gap-8"
@@ -568,7 +684,7 @@ export default function HomePage() {
           </Reveal>
           <div className="grid gap-10 sm:gap-12 lg:grid-cols-2">
             {CASE_STUDIES.slice(0, 2).map((cs, i) => (
-              <Reveal key={cs.id} delay={i * 120}>
+              <Reveal key={cs.id} delay={i * 60}>
                 <Link
                   to={`/case-studies/${cs.slug}`}
                   className="group block border-t border-navy-900 pt-5 sm:pt-6"
@@ -601,11 +717,11 @@ export default function HomePage() {
             </p>
             <div className="mt-6 sm:mt-8">
               <Link to="/check-up" className={btnGold + ' w-full sm:w-auto'}>
-                Apply now <ArrowUpRight className="h-4 w-4" />
+                Apply now <ArrowUpRight className="h-4 w-4 transition-transform duration-200 ease-out-strong group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </Link>
             </div>
           </Reveal>
-          <Reveal delay={120}>
+          <Reveal delay={60}>
             <ul className="divide-y divide-white/15 border-y border-white/15">
               {CHECKUP_POINTS.map((p) => (
                 <li key={p} className="flex gap-3.5 py-4 sm:gap-4 sm:py-5 text-sm sm:text-base">
