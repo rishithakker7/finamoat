@@ -493,6 +493,10 @@ function Knight() {
             <img
               src="/icon.png"
               alt="Finamoat Strategic Knight"
+              width="640"
+              height="616"
+              fetchPriority="high"
+              decoding="async"
               draggable={false}
               className="h-24 sm:h-32 md:h-36 lg:h-44 xl:h-52 w-auto drop-shadow-sm select-none"
             />

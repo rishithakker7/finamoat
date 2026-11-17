@@ -7,7 +7,15 @@ export default function BrandLogo({ variant = 'dark', className = '' }) {
     return (
       <div className={`group inline-flex select-none items-center gap-3 ${className}`}>
         <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white transition-transform duration-200 ease-out-strong group-hover:-rotate-6">
-          <img src="/icon.png" alt="" className="h-9 w-9 object-contain" />
+          <img
+            src="/icon.png"
+            alt=""
+            width="640"
+            height="616"
+            loading="lazy"
+            decoding="async"
+            className="h-9 w-9 object-contain"
+          />
         </span>
         <span className="leading-none">
           <span className="block font-serif text-2xl font-bold tracking-wide text-white">FINAMOAT</span>
@@ -20,6 +28,10 @@ export default function BrandLogo({ variant = 'dark', className = '' }) {
     <img
       src="/logo.png"
       alt="Finamoat — Shared CFO Services"
+      width="700"
+      height="245"
+      fetchPriority="high"
+      decoding="async"
       className={`h-14 w-auto select-none mix-blend-multiply transition-transform duration-200 ease-out-strong hover:scale-[1.03] sm:h-16 ${className}`}
     />
   );

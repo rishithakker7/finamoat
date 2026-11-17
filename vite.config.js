@@ -5,6 +5,17 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    host: true
-  }
+    host: true,
+  },
+  build: {
+    target: 'es2020',
+    cssMinify: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
+  },
 });

@@ -97,7 +97,15 @@ export default function Footer() {
                   title={item.name}
                   className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 p-1.5 transition-[background-color,transform] duration-200 ease-out-strong hover:scale-105 hover:bg-white/15 active:scale-95 active:duration-100"
                 >
-                  <img src={item.icon} alt={item.name} className="h-5 w-5 object-contain" />
+                  <img
+                    src={item.icon}
+                    alt={item.name}
+                    width="20"
+                    height="20"
+                    loading="lazy"
+                    decoding="async"
+                    className="h-5 w-5 object-contain"
+                  />
                 </a>
               ))}
             </div>
