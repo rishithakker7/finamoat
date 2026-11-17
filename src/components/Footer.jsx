@@ -104,15 +104,26 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-slate-500 sm:flex-row sm:justify-between">
+        <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} Finamoat Services. All Rights Reserved.</span>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap items-center gap-6">
             <Link to="/privacy-policy" className={link}>
               Privacy Policy
             </Link>
             <Link to="/check-up" className={link}>
               Free Finance Check-up
             </Link>
+            <span className="inline-flex items-center gap-1.5 text-xs text-inherit opacity-80">
+              <span>Developed by</span>
+              <a
+                href="https://kantadvertising.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium tracking-wider underline underline-offset-4 decoration-current transition-all hover:text-white hover:opacity-100"
+              >
+                KANT
+              </a>
+            </span>
           </div>
         </div>
       </div>
