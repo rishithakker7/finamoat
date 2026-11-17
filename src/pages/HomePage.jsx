@@ -32,7 +32,7 @@ function Knight() {
   };
   return (
     <div
-      className="pointer-events-none relative mx-auto mt-6 mb-4 h-[250px] w-[250px] sm:h-[320px] sm:w-[320px] lg:absolute lg:-right-10 lg:top-6 lg:my-0 lg:h-[520px] lg:w-[520px]"
+      className="pointer-events-none relative aspect-square w-[min(70vw,250px)] sm:w-[300px] md:w-[340px] lg:w-[min(38vw,440px)] xl:w-[500px] flex-shrink-0"
       aria-hidden="true"
     >
       <div className="absolute inset-0 rounded-full border border-navy-900/10" />
@@ -52,7 +52,11 @@ function Knight() {
         onTouchEnd={leave}
       >
         <div ref={ref} className="float transition-transform duration-200 ease-out">
-          <img src="/icon.png" alt="" className="h-32 sm:h-44 lg:h-60 w-auto mix-blend-multiply" />
+          <img
+            src="/icon.png"
+            alt=""
+            className="h-28 sm:h-36 md:h-40 lg:h-48 xl:h-56 w-auto mix-blend-multiply"
+          />
         </div>
       </div>
     </div>
@@ -73,40 +77,47 @@ export default function HomePage() {
 
       {/* 1. Hero: one message, one action */}
       <section className="relative overflow-hidden">
-        <Knight />
-        <div className={`${wrap} relative pt-4 pb-14 sm:pt-6 sm:pb-20 lg:pt-32 lg:pb-32`}>
-          <h1 className="rise max-w-4xl font-serif text-4xl leading-[1.06] tracking-tight text-navy-950 sm:text-6xl lg:text-[84px]">
-            {hero.title}
-          </h1>
-          <p
-            className="rise mt-5 sm:mt-8 max-w-xl text-base sm:text-xl leading-relaxed text-slate-600"
-            style={{ animationDelay: '150ms' }}
-          >
-            {hero.subtitle}
-          </p>
-          <div
-            className="rise mt-8 sm:mt-10 flex flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:gap-4"
-            style={{ animationDelay: '300ms' }}
-          >
-            <Link to="/check-up" className={btnPrimary}>
-              Book a free finance check-up
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </Link>
-            <span className="text-center text-xs sm:text-sm font-medium text-slate-400">
-              or
-            </span>
-            <a
-              href={waLink(
-                SITE_CONFIG.whatsappNumber,
-                'Hi Finamoat, I would like to book a Free Business Finance Check-up for my business.'
-              )}
-              target="_blank"
-              rel="noreferrer"
-              className={btnGhost}
-            >
-              <img src="/icons/whatsapp.svg" alt="" className="h-4 w-4" />
-              WhatsApp Us
-            </a>
+        <div className={`${wrap} pt-6 pb-14 sm:pt-10 sm:pb-20 lg:pt-20 lg:pb-28`}>
+          <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-8">
+            <div className="order-2 lg:order-1 lg:col-span-7">
+              <h1 className="rise font-serif text-[clamp(2.25rem,5.2vw,5.1rem)] leading-[1.05] tracking-tight text-navy-950">
+                {hero.title}
+              </h1>
+              <p
+                className="rise mt-5 sm:mt-7 max-w-xl text-base sm:text-xl leading-relaxed text-slate-600"
+                style={{ animationDelay: '150ms' }}
+              >
+                {hero.subtitle}
+              </p>
+              <div
+                className="rise mt-8 sm:mt-10 flex flex-col items-stretch gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
+                style={{ animationDelay: '300ms' }}
+              >
+                <Link to="/check-up" className={btnPrimary}>
+                  Book a free finance check-up
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </Link>
+                <span className="text-center text-xs sm:text-sm font-medium text-slate-400">
+                  or
+                </span>
+                <a
+                  href={waLink(
+                    SITE_CONFIG.whatsappNumber,
+                    'Hi Finamoat, I would like to book a Free Business Finance Check-up for my business.'
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={btnGhost}
+                >
+                  <img src="/icons/whatsapp.svg" alt="" className="h-4 w-4" />
+                  WhatsApp Us
+                </a>
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2 lg:col-span-5 flex justify-center lg:justify-end">
+              <Knight />
+            </div>
           </div>
         </div>
       </section>

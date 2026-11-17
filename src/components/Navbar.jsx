@@ -39,11 +39,17 @@ export default function Navbar() {
         setSearchOpen((p) => !p);
       } else if (e.key === 'Escape') setSearchOpen(false);
     };
+    const onResize = () => {
+      if (window.innerWidth >= 1024) setOpen(false);
+      onScroll();
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
     window.addEventListener('keydown', onKey);
     return () => {
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
       window.removeEventListener('keydown', onKey);
     };
   }, []);
