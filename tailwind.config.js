@@ -1,5 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
@@ -14,6 +17,10 @@ export default {
         serif: ['"Fraunces"', '"Playfair Display"', 'Georgia', 'serif'],
         sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
+      },
+      transitionTimingFunction: {
+        'out-strong': 'cubic-bezier(0.23,1,0.32,1)',
+        'in-out-strong': 'cubic-bezier(0.77,0,0.175,1)',
       },
     },
   },
