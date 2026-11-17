@@ -91,15 +91,15 @@ export default function AboutPage() {
             </div>
 
             {/* Right Column: Video integrated right into the same section */}
-            <div className="lg:col-span-6">
-              <div className="overflow-hidden rounded-2xl bg-navy-950 shadow-lg aspect-video">
+            <div className="lg:col-span-6 w-full">
+              <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-navy-950 shadow-lg">
                 <iframe
                   title="CA Vikram Menda — How to build a Sustainable Business"
                   src={SITE_CONFIG.youtubeVideoEmbed}
-                  className="h-full w-full border-0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  className="absolute inset-0 h-full w-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
-                  loading="lazy"
                 />
               </div>
               <p className="mt-3 text-xs text-slate-500">

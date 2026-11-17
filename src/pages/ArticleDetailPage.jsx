@@ -82,8 +82,15 @@ export default function ArticleDetailPage({ forcedSlug = null }) {
         )}
 
         {article.videoEmbed && (
-          <div className="mb-12 aspect-video overflow-hidden rounded-2xl bg-navy-950">
-            <iframe title={article.title} src={article.videoEmbed} className="h-full w-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen loading="lazy" />
+          <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-2xl bg-navy-950">
+            <iframe
+              title={article.title}
+              src={article.videoEmbed}
+              className="absolute inset-0 h-full w-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            />
           </div>
         )}
 

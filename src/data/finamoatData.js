@@ -36,8 +36,8 @@ export const SITE_CONFIG = {
   },
   mapEmbedUrl:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3768.48246648789!2d72.9524001149066!3d19.174118453863652!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b946a245c649%3A0xda349bfa1b04e251!2sFinamoat%20Services!5e0!3m2!1sen!2sin!4v1575110000606!5m2!1sen!2sin',
-  youtubePlaylistEmbed: 'https://www.youtube.com/embed/videoseries?list=PLkX2N3B7oGrBH9gk-AIr79Y2YXK9moblE',
-  youtubeVideoEmbed: 'https://www.youtube.com/embed/JORpTNTWQAs',
+  youtubePlaylistEmbed: 'https://www.youtube.com/embed/videoseries?list=PLkX2N3B7oGrBH9gk-AIr79Y2YXK9moblE&playsinline=1&rel=0',
+  youtubeVideoEmbed: 'https://www.youtube.com/embed/JORpTNTWQAs?playsinline=1&rel=0',
   socials: {
     linkedin: 'https://in.linkedin.com/company/finamoat',
     facebook: 'https://www.facebook.com/Finamoat/',
@@ -1051,7 +1051,7 @@ export const BLOG_ARTICLES = [
     readTime: '4 min watch & read',
     featured: false,
     isHistorical: false,
-    videoEmbed: 'https://www.youtube.com/embed/JORpTNTWQAs',
+    videoEmbed: 'https://www.youtube.com/embed/JORpTNTWQAs?playsinline=1&rel=0',
     excerpt:
       'Watch CA Vikram Menda explain how SME owners can shift from a people-driven setup to a process-driven organization using the Promoter-CEO model and exhaustive SOPs.',
     keyTakeaways: [
