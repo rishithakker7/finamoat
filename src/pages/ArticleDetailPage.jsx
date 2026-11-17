@@ -51,7 +51,7 @@ export default function ArticleDetailPage({ forcedSlug = null }) {
   const submit = (e) => {
     e.preventDefault();
     if (form.honeypot) return;
-    setLocal([...local, { author: form.name, date: 'Just now', text: form.comment }]);
+    setLocal([...local, { author: form.name, date: 'Just now', text: form.comment, isNew: true }]);
     setForm({ name: '', email: '', comment: '', honeypot: '' });
   };
 
@@ -60,12 +60,12 @@ export default function ArticleDetailPage({ forcedSlug = null }) {
       <SEOHead title={`${article.title} — By CA Vikram Menda`} description={article.excerpt} canonicalPath={`/insights/${article.slug}`} type="article" articleData={article} />
 
       <header className={`${wrap} max-w-3xl pt-14 pb-10 sm:pt-20`}>
-        <Link to="/insights" className="rise inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-navy-900">
+        <Link to="/insights" className="rise inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors duration-150 hover:text-navy-900">
           <ArrowLeft className="h-4 w-4" /> All insights
         </Link>
-        <p className="rise mt-8 text-sm text-slate-500" style={{ animationDelay: '80ms' }}>{article.date} · {article.readTime} · {article.author}</p>
-        <h1 className="rise mt-3 font-serif text-4xl leading-[1.1] tracking-tight text-navy-950 sm:text-6xl" style={{ animationDelay: '160ms' }}>{article.title}</h1>
-        {article.subtitle && <p className="rise mt-6 text-xl leading-relaxed text-slate-600" style={{ animationDelay: '240ms' }}>{article.subtitle}</p>}
+        <p className="rise mt-8 text-sm text-slate-500" style={{ animationDelay: '60ms' }}>{article.date} · {article.readTime} · {article.author}</p>
+        <h1 className="rise mt-3 font-serif text-4xl leading-[1.1] tracking-tight text-navy-950 sm:text-6xl" style={{ animationDelay: '120ms' }}>{article.title}</h1>
+        {article.subtitle && <p className="rise mt-6 text-xl leading-relaxed text-slate-600" style={{ animationDelay: '180ms' }}>{article.subtitle}</p>}
       </header>
 
       <article className={`${wrap} max-w-3xl pb-20`}>
@@ -88,7 +88,7 @@ export default function ArticleDetailPage({ forcedSlug = null }) {
         )}
 
         <div className="space-y-6 text-[18px] leading-[1.85] text-slate-800">
-          {article.blocks.map((b, i) => (<Reveal key={i}><Block b={b} /></Reveal>))}
+          {article.blocks.map((b, i) => (<Block key={i} b={b} />))}
         </div>
 
         <Reveal className="mt-14 border-t border-navy-900/15 pt-8">
@@ -115,7 +115,7 @@ export default function ArticleDetailPage({ forcedSlug = null }) {
           {comments.length > 0 && (
             <div className="mt-6 divide-y divide-navy-900/10 border-y border-navy-900/10">
               {comments.map((c, i) => (
-                <div key={i} className="py-5">
+                <div key={i} className={`py-5 ${c.isNew ? 'rise' : ''}`}>
                   <div className="flex justify-between text-sm"><strong className="text-navy-900">{c.author}</strong><span className="text-slate-400">{c.date}</span></div>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">{c.text}</p>
                 </div>
@@ -129,7 +129,7 @@ export default function ArticleDetailPage({ forcedSlug = null }) {
               <input required type="email" placeholder="Your email (not published)" className={inputCls} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
             </div>
             <textarea required rows={3} placeholder="Share your thoughts or ask CA Vikram Menda a question" className={inputCls} value={form.comment} onChange={(e) => setForm({ ...form, comment: e.target.value })} />
-            <button className="rounded-full bg-navy-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-navy-800">Post comment</button>
+            <button className="rounded-full bg-navy-900 px-6 py-3 text-sm font-semibold text-white transition-[background-color,transform] duration-200 ease-out-strong hover:bg-navy-800 active:scale-[0.97] active:duration-100">Post comment</button>
           </form>
         </section>
 

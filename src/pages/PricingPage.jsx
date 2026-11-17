@@ -21,7 +21,7 @@ export default function PricingPage() {
       <section className="py-16 sm:py-24">
         <div className={`${wrap} grid gap-6 lg:grid-cols-3`}>
           {ENGAGEMENT_MODELS.map((m, i) => (
-            <Reveal key={m.id} delay={i * 100} className={`flex flex-col rounded-3xl p-8 ${m.featured ? 'bg-navy-900 text-white' : 'border border-navy-900/15'}`}>
+            <Reveal key={m.id} delay={i * 60} className={`flex flex-col rounded-3xl p-8 ${m.featured ? 'bg-navy-900 text-white' : 'border border-navy-900/15'}`}>
               <h2 className="font-serif text-2xl">{m.name}</h2>
               <p className={`mt-2 text-sm ${m.featured ? 'text-slate-300' : 'text-slate-600'}`}>{m.tagline}</p>
               <div className="mt-6 font-serif text-4xl">{m.price}</div>
@@ -35,7 +35,7 @@ export default function PricingPage() {
                   </li>
                 ))}
               </ul>
-              <Link to={m.ctaLink} className={`mt-8 rounded-full py-3.5 text-center text-sm font-semibold transition hover:-translate-y-0.5 ${m.featured ? 'bg-accent-500 text-white hover:bg-accent-600' : 'bg-navy-900 text-white hover:bg-navy-800'}`}>
+              <Link to={m.ctaLink} className={`mt-8 rounded-full py-3.5 text-center text-sm font-semibold transition-[background-color,transform] duration-200 ease-out-strong hover:-translate-y-0.5 active:scale-[0.97] active:duration-100 ${m.featured ? 'bg-accent-500 text-white hover:bg-accent-600' : 'bg-navy-900 text-white hover:bg-navy-800'}`}>
                 {m.ctaLabel}
               </Link>
             </Reveal>
@@ -77,7 +77,7 @@ export default function PricingPage() {
       <section className="py-20 sm:py-28">
         <div className={`${wrap} grid gap-12 lg:grid-cols-12`}>
           <Reveal className="lg:col-span-4"><h2 className="font-serif text-4xl text-navy-950">Frequently asked questions</h2></Reveal>
-          <Reveal delay={100} className="lg:col-span-8"><Accordion items={FAQS} /></Reveal>
+          <Reveal delay={60} className="lg:col-span-8"><Accordion items={FAQS} /></Reveal>
         </div>
       </section>
     </>

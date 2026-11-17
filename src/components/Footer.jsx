@@ -47,7 +47,7 @@ export default function Footer() {
 
           <div className="md:col-span-3">
             <div className={col}>Services</div>
-            <ul className="max-h-48 space-y-2.5 overflow-y-auto pr-2 text-sm">
+            <ul className="max-h-48 space-y-2.5 overflow-y-auto overscroll-contain pr-2 text-sm">
               {SERVICES.map((x) => (
                 <li key={x.id}>
                   <Link to={`/services#${x.slug}`} className={link}>
@@ -95,7 +95,7 @@ export default function Footer() {
                   rel="noreferrer"
                   aria-label={item.name}
                   title={item.name}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 p-1.5 transition hover:scale-105 hover:bg-white/15"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 p-1.5 transition-[background-color,transform] duration-200 ease-out-strong hover:scale-105 hover:bg-white/15 active:scale-95 active:duration-100"
                 >
                   <img src={item.icon} alt={item.name} className="h-5 w-5 object-contain" />
                 </a>
@@ -119,7 +119,7 @@ export default function Footer() {
                 href="https://kantadvertising.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium tracking-wider underline underline-offset-4 decoration-current transition-all hover:text-white hover:opacity-100"
+                className="font-medium tracking-wider underline underline-offset-4 decoration-current transition-[color,opacity] duration-150 hover:text-white hover:opacity-100"
               >
                 KANT
               </a>

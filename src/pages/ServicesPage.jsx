@@ -37,7 +37,7 @@ export default function ServicesPage() {
         <div className={wrap}>
           <div className="no-scrollbar mb-4 flex gap-6 overflow-x-auto border-b border-navy-900/10">
             {CATEGORIES.map((c) => (
-              <button key={c} onClick={() => setCat(c)} className={`-mb-px whitespace-nowrap border-b-2 pb-3 text-sm font-medium transition ${cat === c ? 'border-navy-900 text-navy-950' : 'border-transparent text-slate-500 hover:text-navy-900'}`}>{c}</button>
+              <button key={c} type="button" onClick={() => setCat(c)} className={`-mb-px whitespace-nowrap border-b-2 pb-3 text-sm font-medium transition-[color,border-color] duration-150 ${cat === c ? 'border-navy-900 text-navy-950' : 'border-transparent text-slate-500 hover:text-navy-900'}`}>{c}</button>
             ))}
           </div>
 
@@ -46,16 +46,19 @@ export default function ServicesPage() {
               const isOpen = open === s.slug;
               return (
                 <li key={s.id} id={s.slug} className="scroll-mt-28 border-b border-navy-900/10">
-                  <button onClick={() => setOpen(isOpen ? null : s.slug)} aria-expanded={isOpen} className="flex w-full items-center justify-between gap-6 py-6 text-left">
+                  <button type="button" onClick={() => setOpen(isOpen ? null : s.slug)} aria-expanded={isOpen} className="flex w-full items-center justify-between gap-6 py-6 text-left">
                     <div>
                       <h2 className="font-serif text-2xl text-navy-950 sm:text-3xl">{s.title}</h2>
                       <p className="mt-2 max-w-2xl text-slate-600">{s.shortDesc}</p>
                     </div>
-                    <Plus className={`h-5 w-5 flex-shrink-0 text-accent-600 transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`} />
+                    <Plus className={`h-5 w-5 flex-shrink-0 text-accent-600 transition-transform duration-[250ms] ease-out-strong ${isOpen ? 'rotate-45' : ''}`} />
                   </button>
 
-                  <div className={`grid transition-[grid-template-rows] duration-500 ease-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-                    <div className="overflow-hidden">
+                  <div
+                    {...(isOpen ? {} : { inert: '' })}
+                    className={`grid transition-[grid-template-rows] duration-[350ms] ease-out-strong ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                  >
+                    <div className={`overflow-hidden transition-opacity duration-200 ease-out-strong ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
                       <div className="grid gap-8 pb-10 pt-2 lg:grid-cols-12 lg:gap-14">
                         <div className="lg:col-span-7">
                           <p className="leading-relaxed text-slate-700">{s.verbatimDescription}</p>
@@ -102,7 +105,7 @@ export default function ServicesPage() {
           </Reveal>
           <div className="grid gap-x-16 md:grid-cols-2">
             {SLEEPLESS_QUESTIONS.map((q, i) => (
-              <Reveal key={i} delay={(i % 2) * 100} className="border-t border-navy-900/15 py-7">
+              <Reveal key={i} delay={(i % 2) * 60} className="border-t border-navy-900/15 py-7">
                 <h3 className="font-serif text-xl leading-snug text-navy-950">{q.question}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">{q.solution}</p>
               </Reveal>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, MessageCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
 import { PageHero, Reveal, wrap, btnGold, inputCls, waLink } from '../components/ui';
 import { SITE_CONFIG } from '../data/finamoatData';
@@ -99,7 +99,7 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
           <Reveal className="lg:order-2 lg:col-span-5">
             <div className="lg:sticky lg:top-28">
               {submitted ? (
-                <div className="py-6">
+                <div className="rise py-6">
                   <CheckCircle2 className="h-10 w-10 text-emerald-600" />
                   <h2 className="mt-5 font-serif text-3xl text-navy-950">Application confirmed</h2>
                   <p className="mt-3 leading-relaxed text-slate-600">
@@ -109,7 +109,7 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
                   <a
                     href={waLink(SITE_CONFIG.whatsappNumber, `Hi Finamoat, I am ${form.name} (${form.city}). I just applied for the Free Business Finance Check-up on your website.${answered > 0 ? ` My preliminary health score is ${total}/100.` : ''}`)}
                     target="_blank" rel="noreferrer"
-                    className="mt-8 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-emerald-700 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-emerald-600"
+                    className="mt-8 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-emerald-700 px-6 py-3.5 text-sm font-semibold text-white transition-[background-color,transform] duration-200 ease-out-strong hover:bg-emerald-600 active:scale-[0.97] active:duration-100"
                   >
                     <img src="/icons/whatsapp.svg" alt="" className="h-4 w-4" /> WhatsApp Us
                   </a>
@@ -127,7 +127,7 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
                   </div>
                   {!isSubscribeMode && <input placeholder="Key focus area (cashflow, MIS, fundraising…)" className={inputCls} value={form.notes} onChange={set('notes')} />}
                   <button className={btnGold + ' w-full'}>
-                    {isSubscribeMode ? 'Subscribe now' : 'Submit & request free check-up'} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    {isSubscribeMode ? 'Subscribe now' : 'Submit & request free check-up'} <ArrowRight className="h-4 w-4 transition-transform duration-200 ease-out-strong group-hover:translate-x-1" />
                   </button>
                   <p className="text-center text-xs text-slate-500">We respect your privacy. Your financial information is 100% confidential.</p>
                 </form>
@@ -135,7 +135,7 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
             </div>
           </Reveal>
 
-          <Reveal delay={100} className="lg:order-1 lg:col-span-7">
+          <Reveal delay={60} className="lg:order-1 lg:col-span-7">
             <div className="flex items-baseline justify-between border-b border-navy-900/10 pb-4">
               <div>
                 <h2 className="font-serif text-2xl text-navy-950 sm:text-3xl">Preview your finance health score</h2>
@@ -144,7 +144,10 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
               <span className="font-mono text-sm text-slate-500">{answered}/5</span>
             </div>
             <div className="mt-2 h-1 overflow-hidden rounded-full bg-navy-900/10">
-              <div className="h-full rounded-full bg-accent-500 transition-all duration-500" style={{ width: `${(answered / 5) * 100}%` }} />
+              <div
+                className="h-full w-full origin-left rounded-full bg-accent-500 transition-transform duration-300 ease-out-strong"
+                style={{ transform: `scaleX(${answered / 5})` }}
+              />
             </div>
 
             <div className="mt-10 space-y-10">
@@ -158,9 +161,9 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
                         <button
                           key={o.label} type="button"
                           onClick={() => setAnswers({ ...answers, [q.id]: o.score })}
-                          className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition ${on ? 'border-navy-900 bg-navy-900 text-white' : 'border-navy-900/15 text-slate-700 hover:border-navy-900/50'}`}
+                          className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-[background-color,border-color,color,transform] duration-150 active:scale-[0.98] active:duration-100 ${on ? 'border-navy-900 bg-navy-900 text-white' : 'border-navy-900/15 text-slate-700 hover:border-navy-900/50'}`}
                         >
-                          <span className={`h-4 w-4 flex-shrink-0 rounded-full border-2 transition ${on ? 'border-accent-400 bg-accent-400' : 'border-slate-300'}`} />
+                          <span className={`h-4 w-4 flex-shrink-0 rounded-full border-2 transition-[background-color,border-color] duration-150 ${on ? 'border-accent-400 bg-accent-400' : 'border-slate-300'}`} />
                           {o.label}
                         </button>
                       );
@@ -171,7 +174,7 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
             </div>
 
             {answered > 0 && (
-              <div className="mt-12 rounded-3xl bg-navy-950 p-7 text-white">
+              <div className="rise mt-12 rounded-3xl bg-navy-950 p-7 text-white">
                 <div className="font-serif text-5xl text-accent-300">{total}<span className="text-2xl text-slate-500"> / 100</span></div>
                 <div className="mt-3 font-serif text-xl">{band.label}</div>
                 <p className="mt-2 text-sm leading-relaxed text-slate-300">{band.text}</p>

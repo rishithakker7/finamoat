@@ -57,7 +57,7 @@ export default function CaseStudiesPage() {
           <Reveal className="mb-12"><h2 className="font-serif text-3xl text-navy-950 sm:text-5xl">What our clients say</h2></Reveal>
           <div className="grid gap-12 md:grid-cols-3">
             {TESTIMONIALS.map((t, i) => (
-              <Reveal key={t.id} delay={i * 100}>
+              <Reveal key={t.id} delay={i * 60}>
                 <p className="font-serif text-lg leading-relaxed text-navy-950">“{t.quote}”</p>
                 <div className="mt-6 border-t border-navy-900/15 pt-4">
                   <div className="font-semibold text-navy-900">{t.name}</div>

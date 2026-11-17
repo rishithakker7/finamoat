@@ -55,7 +55,7 @@ export default function InsightsPage({ initialTab = 'All' }) {
                   key={t}
                   type="button"
                   onClick={() => setFilter(t)}
-                  className={`whitespace-nowrap border-b-2 pb-3 text-sm font-medium -mb-px transition ${
+                  className={`whitespace-nowrap border-b-2 pb-3 text-sm font-medium -mb-px transition-[color,border-color] duration-150 ${
                     filter === t
                       ? 'border-navy-900 text-navy-950'
                       : 'border-transparent text-slate-500 hover:text-navy-900'
@@ -86,6 +86,7 @@ export default function InsightsPage({ initialTab = 'All' }) {
                 {cases.map((cs) => (
                   <Reveal
                     key={cs.id}
+                    disabled={q.length > 0}
                     className="grid gap-8 border-t border-navy-900/15 pt-8 lg:grid-cols-12 lg:gap-14"
                   >
                     <div className="lg:col-span-4">
@@ -146,7 +147,7 @@ export default function InsightsPage({ initialTab = 'All' }) {
               )}
               <ul>
                 {articles.map((a) => (
-                  <Reveal as="li" key={a.id} className="border-b border-navy-900/10">
+                  <Reveal as="li" key={a.id} disabled={q.length > 0} className="border-b border-navy-900/10">
                     <Link
                       to={`/insights/${a.slug}`}
                       className="group grid gap-3 py-8 hover-row md:grid-cols-12 md:gap-10"
@@ -184,7 +185,7 @@ export default function InsightsPage({ initialTab = 'All' }) {
               href={waLink(SITE_CONFIG.whatsappNumber, 'Learning')}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-full bg-navy-900 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-navy-800"
+              className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-full bg-navy-900 px-6 py-3.5 text-sm font-semibold text-white transition-[background-color,transform] duration-200 ease-out-strong hover:bg-navy-800 active:scale-[0.97] active:duration-100"
             >
               <img src="/icons/whatsapp.svg" alt="" className="h-4 w-4" />
               Send “Learning”
@@ -201,7 +202,7 @@ export default function InsightsPage({ initialTab = 'All' }) {
           </Reveal>
           <div className="grid gap-8 sm:gap-12 md:grid-cols-3">
             {TESTIMONIALS.map((t, i) => (
-              <Reveal key={t.id} delay={i * 100}>
+              <Reveal key={t.id} delay={i * 60}>
                 <p className="font-serif text-lg leading-relaxed text-navy-950">“{t.quote}”</p>
                 <div className="mt-6 border-t border-navy-900/15 pt-4">
                   <div className="font-semibold text-navy-900">{t.name}</div>

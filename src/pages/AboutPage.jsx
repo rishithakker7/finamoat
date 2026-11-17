@@ -38,7 +38,7 @@ export default function AboutPage() {
               ))}
             </ul>
           </Reveal>
-          <Reveal delay={120}>
+          <Reveal delay={60}>
             <h2 className="font-serif text-2xl text-navy-950 sm:text-4xl">
               Our team handholds the client to
             </h2>

@@ -18,13 +18,13 @@ export default function CaseStudyDetailPage({ forcedSlug = null }) {
 
       <section className="border-b border-navy-900/10">
         <div className={`${wrap} max-w-4xl pt-14 pb-14 sm:pt-20`}>
-          <Link to="/case-studies" className="rise inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-navy-900">
+          <Link to="/case-studies" className="rise inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors duration-150 hover:text-navy-900">
             <ArrowLeft className="h-4 w-4" /> All case studies
           </Link>
-          <p className="rise mt-8 text-sm text-slate-500" style={{ animationDelay: '80ms' }}>{cs.industry} · {cs.date}</p>
-          <h1 className="rise mt-3 font-serif text-4xl leading-[1.1] text-navy-950 sm:text-5xl" style={{ animationDelay: '160ms' }}>{cs.title}</h1>
-          <p className="rise mt-6 text-lg leading-relaxed text-slate-600" style={{ animationDelay: '240ms' }}>{cs.summary}</p>
-          <dl className="rise mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4" style={{ animationDelay: '320ms' }}>
+          <p className="rise mt-8 text-sm text-slate-500" style={{ animationDelay: '60ms' }}>{cs.industry} · {cs.date}</p>
+          <h1 className="rise mt-3 font-serif text-4xl leading-[1.1] text-navy-950 sm:text-5xl" style={{ animationDelay: '120ms' }}>{cs.title}</h1>
+          <p className="rise mt-6 text-lg leading-relaxed text-slate-600" style={{ animationDelay: '180ms' }}>{cs.summary}</p>
+          <dl className="rise mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4" style={{ animationDelay: '180ms' }}>
             {cs.metrics.map((m) => (
               <div key={m.label} className="border-t border-navy-900 pt-3">
                 <dt className="text-xs text-slate-500">{m.label}</dt>
@@ -39,7 +39,7 @@ export default function CaseStudyDetailPage({ forcedSlug = null }) {
         <div className={`${wrap} max-w-4xl`}>
           <div className="grid gap-10 md:grid-cols-3">
             {[['The problem', cs.challenge], ['Finamoat’s approach', cs.solution], ['The outcome', cs.result]].map(([h, t], i) => (
-              <Reveal key={h} delay={i * 90}>
+              <Reveal key={h} delay={i * 60}>
                 <h2 className="font-serif text-xl text-navy-950">{h}</h2>
                 <p className="mt-3 text-sm leading-relaxed text-slate-600">{t}</p>
               </Reveal>

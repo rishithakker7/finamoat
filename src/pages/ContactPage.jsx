@@ -18,7 +18,7 @@ function Choice({ options, value, onChange }) {
           key={o}
           type="button"
           onClick={() => onChange(o)}
-          className={`rounded-full border px-4 py-2 text-sm transition ${
+          className={`rounded-full border px-4 py-2 text-sm transition-[background-color,border-color,color,transform] duration-150 active:scale-[0.97] active:duration-100 ${
             value === o
               ? 'border-navy-900 bg-navy-900 text-white'
               : 'border-navy-900/20 text-slate-700 hover:border-navy-900'
@@ -107,9 +107,9 @@ export default function ContactPage() {
             </a>
           </Reveal>
 
-          <Reveal delay={120} className="lg:col-span-7">
+          <Reveal delay={60} className="lg:col-span-7">
             {done ? (
-              <div className="py-16">
+              <div className="rise py-16">
                 <CheckCircle2 className="h-10 w-10 text-emerald-600" />
                 <h2 className="mt-5 font-serif text-3xl text-navy-950">
                   Consultation request logged
@@ -203,7 +203,7 @@ export default function ContactPage() {
               title="Finamoat office on Google Maps"
               src={s.mapEmbedUrl}
               loading="lazy"
-              className="h-64 sm:h-80 w-full rounded-3xl border-0 grayscale transition duration-500 hover:grayscale-0"
+              className="h-64 sm:h-80 w-full rounded-3xl border-0 [@media(hover:hover)_and_(pointer:fine)]:grayscale [@media(hover:hover)_and_(pointer:fine)]:hover:grayscale-0 transition-[filter] duration-300"
             />
           </div>
         )}
