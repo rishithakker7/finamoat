@@ -32,7 +32,7 @@ function Knight() {
   };
   return (
     <div
-      className="pointer-events-none relative mx-auto mb-10 mt-2 h-[260px] w-[260px] sm:h-[340px] sm:w-[340px] lg:absolute lg:-right-10 lg:top-6 lg:my-0 lg:h-[520px] lg:w-[520px]"
+      className="pointer-events-none relative mx-auto mt-6 mb-4 h-[250px] w-[250px] sm:h-[320px] sm:w-[320px] lg:absolute lg:-right-10 lg:top-6 lg:my-0 lg:h-[520px] lg:w-[520px]"
       aria-hidden="true"
     >
       <div className="absolute inset-0 rounded-full border border-navy-900/10" />
@@ -73,7 +73,8 @@ export default function HomePage() {
 
       {/* 1. Hero: one message, one action */}
       <section className="relative overflow-hidden">
-        <div className={`${wrap} relative pt-10 pb-6 sm:pt-20 sm:pb-10 lg:pt-32 lg:pb-32`}>
+        <Knight />
+        <div className={`${wrap} relative pt-4 pb-14 sm:pt-6 sm:pb-20 lg:pt-32 lg:pb-32`}>
           <h1 className="rise max-w-4xl font-serif text-4xl leading-[1.06] tracking-tight text-navy-950 sm:text-6xl lg:text-[84px]">
             {hero.title}
           </h1>
@@ -108,7 +109,6 @@ export default function HomePage() {
             </a>
           </div>
         </div>
-        <Knight />
       </section>
 
       {/* 2. Proof: the four results */}
