@@ -17,7 +17,8 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [q, setQ] = useState('');
-  const [progress, setProgress] = useState(0);
+  const progressRef = useRef(null);
+  const maxScrollRef = useRef(0);
   const inputRef = useRef(null);
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -28,31 +29,65 @@ export default function Navbar() {
   }, [pathname]);
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 12);
-      const h = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(h > 0 ? window.scrollY / h : 0);
+    let ticking = false;
+
+    const computeMaxScroll = () => {
+      maxScrollRef.current = Math.max(
+        0,
+        document.documentElement.scrollHeight - window.innerHeight
+      );
     };
+
+    const updateScroll = () => {
+      ticking = false;
+      const y = window.scrollY;
+      const isScrolled = y > 12;
+      setScrolled((prev) => (prev === isScrolled ? prev : isScrolled));
+      if (progressRef.current) {
+        const h = maxScrollRef.current;
+        const p = h > 0 ? Math.min(1, Math.max(0, y / h)) : 0;
+        progressRef.current.style.transform = `scaleX(${p})`;
+      }
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateScroll);
+      }
+    };
+
+    const onResize = () => {
+      if (window.innerWidth >= 1024) setOpen(false);
+      computeMaxScroll();
+      onScroll();
+    };
+
     const onKey = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setSearchOpen((p) => !p);
-      } else if (e.key === 'Escape') setSearchOpen(false);
+      } else if (e.key === 'Escape') {
+        setSearchOpen(false);
+      }
     };
-    const onResize = () => {
-      if (window.innerWidth >= 1024) setOpen(false);
-      onScroll();
-    };
-    onScroll();
+
+    computeMaxScroll();
+    updateScroll();
+
+    const ro = new ResizeObserver(computeMaxScroll);
+    ro.observe(document.documentElement);
+
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize, { passive: true });
     window.addEventListener('keydown', onKey);
     return () => {
+      ro.disconnect();
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
       window.removeEventListener('keydown', onKey);
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (searchOpen) setTimeout(() => inputRef.current?.focus(), 50);
@@ -84,15 +119,16 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+      className={`sticky top-0 z-50 transition-[background-color,border-color] duration-200 ${
         scrolled || open
           ? 'border-b border-navy-900/10 bg-sand-50/90 backdrop-blur'
           : 'border-b border-transparent bg-transparent'
       }`}
     >
       <div
-        className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-accent-500 transition-transform duration-150"
-        style={{ transform: `scaleX(${progress})` }}
+        ref={progressRef}
+        className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-accent-500"
+        style={{ transform: 'scaleX(0)' }}
       />
       <div className={`${wrap} flex h-20 sm:h-24 items-center justify-between`}>
         <Link to="/" aria-label="Finamoat home">
@@ -116,15 +152,16 @@ export default function Navbar() {
             </NavLink>
           ))}
           <button
+            type="button"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
-            className="text-slate-500 transition hover:text-navy-950"
+            className="text-slate-500 transition-colors duration-150 hover:text-navy-950"
           >
             <Search className="h-4 w-4" />
           </button>
           <Link
             to="/check-up"
-            className="rounded-full bg-navy-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-navy-800"
+            className="rounded-full bg-navy-900 px-5 py-2.5 text-sm font-semibold text-white transition-[background-color,transform] duration-200 ease-out-strong hover:bg-navy-800 active:scale-[0.97] active:duration-100"
           >
             Free Check-up
           </Link>
@@ -132,6 +169,7 @@ export default function Navbar() {
 
         <div className="flex items-center gap-1 lg:hidden">
           <button
+            type="button"
             className="p-2"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
@@ -139,9 +177,12 @@ export default function Navbar() {
             <Search className="h-5 w-5" />
           </button>
           <button
+            type="button"
             className="-mr-2 p-2"
             onClick={() => setOpen(!open)}
             aria-label="Menu"
+            aria-expanded={open}
+            aria-controls="mobile-nav-drawer"
           >
             {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -149,11 +190,17 @@ export default function Navbar() {
       </div>
 
       <div
-        className={`grid transition-[grid-template-rows] duration-300 lg:hidden ${
+        id="mobile-nav-drawer"
+        {...(open ? {} : { inert: '' })}
+        className={`grid transition-[grid-template-rows] duration-[250ms] ease-out-strong lg:hidden ${
           open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
         }`}
       >
-        <nav className="overflow-hidden">
+        <nav
+          className={`overflow-hidden transition-opacity duration-200 ease-out-strong ${
+            open ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
           <div className={`${wrap} flex flex-col pb-6`}>
             {LINKS.map((l) => (
               <Link
@@ -166,7 +213,7 @@ export default function Navbar() {
             ))}
             <Link
               to="/check-up"
-              className="mt-4 rounded-full bg-navy-900 py-3.5 text-center text-sm font-semibold text-white"
+              className="mt-4 rounded-full bg-navy-900 py-3.5 text-center text-sm font-semibold text-white active:scale-[0.97] active:duration-100"
             >
               Free Business Finance Check-up
             </Link>
@@ -176,12 +223,11 @@ export default function Navbar() {
 
       {searchOpen && (
         <div
-          className="fixed inset-0 z-[60] flex items-start justify-center bg-navy-950/40 px-5 pt-24 backdrop-blur-sm"
+          className="modal-backdrop fixed inset-0 z-[60] flex items-start justify-center bg-navy-950/40 px-5 pt-24"
           onClick={() => setSearchOpen(false)}
         >
           <div
-            className="rise w-full max-w-2xl overflow-hidden rounded-2xl bg-sand-50 shadow-2xl"
-            style={{ animationDuration: '0.35s' }}
+            className="modal-panel w-full max-w-2xl overflow-hidden rounded-2xl bg-sand-50 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 border-b border-navy-900/10 px-5">
@@ -198,7 +244,7 @@ export default function Navbar() {
                 type="button"
                 onClick={() => setSearchOpen(false)}
                 aria-label="Close search"
-                className="rounded-lg p-1.5 text-slate-400 transition hover:bg-navy-900/10 hover:text-navy-950"
+                className="rounded-lg p-1.5 text-slate-400 transition-colors duration-150 hover:bg-navy-900/10 hover:text-navy-950"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -209,7 +255,7 @@ export default function Navbar() {
                   <li key={i}>
                     <Link
                       to={r.to}
-                      className="flex items-baseline justify-between gap-4 px-5 py-3 transition hover:bg-sand-100"
+                      className="flex items-baseline justify-between gap-4 px-5 py-3 transition-colors duration-150 hover:bg-sand-100"
                     >
                       <span className="text-navy-950">{r.t}</span>
                       <span className="flex-shrink-0 text-xs text-slate-400">{r.k}</span>
