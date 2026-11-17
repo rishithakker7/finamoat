@@ -282,6 +282,14 @@ function Knight() {
       syncLoop();
     };
 
+    // Prevent iOS Safari / Android Chrome from scrolling the page while dragging inside the orbital circle
+    const preventTouchScroll = (e) => {
+      if (!phys.current.reducedMotion) {
+        e.preventDefault();
+      }
+    };
+
+    stageEl.addEventListener('touchmove', preventTouchScroll, { passive: false });
     document.addEventListener('visibilitychange', onVisChange);
     mql.addEventListener('change', onMqlChange);
 
@@ -289,6 +297,7 @@ function Knight() {
       if (rafId !== null) cancelAnimationFrame(rafId);
       ro.disconnect();
       io.disconnect();
+      stageEl.removeEventListener('touchmove', preventTouchScroll);
       document.removeEventListener('visibilitychange', onVisChange);
       mql.removeEventListener('change', onMqlChange);
     };
@@ -371,7 +380,7 @@ function Knight() {
       onPointerUp={handlePointerUpOrCancel}
       onPointerCancel={handlePointerUpOrCancel}
       onPointerLeave={handlePointerUpOrCancel}
-      className={`relative aspect-square w-[min(74vw,270px)] sm:w-[320px] md:w-[360px] lg:w-[min(38vw,440px)] xl:w-[500px] flex-shrink-0 select-none touch-pan-y ${
+      className={`relative aspect-square w-[min(74vw,270px)] sm:w-[320px] md:w-[360px] lg:w-[min(38vw,440px)] xl:w-[500px] flex-shrink-0 rounded-full select-none touch-none ${
         isDragging ? 'cursor-grabbing' : 'cursor-grab'
       }`}
       aria-label="Interactive Orbital Growth Graphic — Drag to spin, tap knight or nodes to inspect metrics"
@@ -444,7 +453,7 @@ function Knight() {
                 if (e.pointerType === 'mouse') setActiveIdx(i);
               }}
               aria-label={`${node.metric}: ${node.title}`}
-              className={`group relative -translate-x-1/2 -translate-y-1/2 rounded-full transition-transform duration-200 ease-out-strong focus:outline-none active:scale-95 ${
+              className={`group relative -translate-x-1/2 -translate-y-1/2 rounded-full touch-none transition-transform duration-200 ease-out-strong focus:outline-none active:scale-95 ${
                 isSelected ? 'scale-125' : 'hover:scale-125'
               }`}
             >
