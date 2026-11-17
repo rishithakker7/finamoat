@@ -16,23 +16,43 @@ const CATEGORIES = ['Core CFO Advisory', 'Capital & M&A', 'Treasury & Cashflow',
 
 function Knight() {
   const ref = useRef(null);
-  const move = (e) => {
+  const tilt = (clientX, clientY) => {
+    if (!ref.current) return;
     const r = ref.current.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
+    const x = (clientX - r.left) / r.width - 0.5;
+    const y = (clientY - r.top) / r.height - 0.5;
     ref.current.style.transform = `perspective(900px) rotateY(${x * 14}deg) rotateX(${-y * 14}deg)`;
   };
-  const leave = () => { ref.current.style.transform = ''; };
+  const move = (e) => tilt(e.clientX, e.clientY);
+  const touch = (e) => {
+    if (e.touches?.[0]) tilt(e.touches[0].clientX, e.touches[0].clientY);
+  };
+  const leave = () => {
+    if (ref.current) ref.current.style.transform = '';
+  };
   return (
-    <div className="pointer-events-none absolute -right-10 top-6 hidden h-[520px] w-[520px] lg:block" aria-hidden="true">
+    <div
+      className="pointer-events-none relative mx-auto mb-12 mt-2 h-[280px] w-[280px] sm:h-[360px] sm:w-[360px] lg:absolute lg:-right-10 lg:top-6 lg:my-0 lg:h-[520px] lg:w-[520px]"
+      aria-hidden="true"
+    >
       <div className="absolute inset-0 rounded-full border border-navy-900/10" />
-      <div className="absolute inset-[70px] rounded-full border border-navy-900/10" />
-      <div className="absolute inset-[140px] rounded-full bg-accent-500/5 pulse-ring" />
-      <div className="orbit absolute inset-0"><span className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-500" /></div>
-      <div className="orbit-rev absolute inset-[70px]"><span className="absolute left-0 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-navy-900" /></div>
-      <div className="pointer-events-auto absolute inset-0 flex items-center justify-center" onMouseMove={move} onMouseLeave={leave}>
+      <div className="absolute inset-[13.5%] rounded-full border border-navy-900/10" />
+      <div className="absolute inset-[27%] rounded-full bg-accent-500/5 pulse-ring" />
+      <div className="orbit absolute inset-0">
+        <span className="absolute left-1/2 top-0 h-3 w-3 lg:h-4 lg:w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-500" />
+      </div>
+      <div className="orbit-rev absolute inset-[13.5%]">
+        <span className="absolute left-0 top-1/2 h-2.5 w-2.5 lg:h-3 lg:w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-navy-900" />
+      </div>
+      <div
+        className="pointer-events-auto absolute inset-0 flex items-center justify-center"
+        onMouseMove={move}
+        onMouseLeave={leave}
+        onTouchMove={touch}
+        onTouchEnd={leave}
+      >
         <div ref={ref} className="float transition-transform duration-200 ease-out">
-          <img src="/icon.png" alt="" className="h-60 w-auto mix-blend-multiply" />
+          <img src="/icon.png" alt="" className="h-32 sm:h-44 lg:h-60 w-auto mix-blend-multiply" />
         </div>
       </div>
     </div>
@@ -53,8 +73,7 @@ export default function HomePage() {
 
       {/* 1. Hero: one message, one action */}
       <section className="relative overflow-hidden">
-        <Knight />
-        <div className={`${wrap} relative pt-20 pb-24 lg:pt-32 lg:pb-32`}>
+        <div className={`${wrap} relative pt-14 pb-6 sm:pt-20 sm:pb-10 lg:pt-32 lg:pb-32`}>
           <h1 className="rise max-w-4xl font-serif text-5xl leading-[1.03] tracking-tight text-navy-950 sm:text-7xl lg:text-[84px]">{hero.title}</h1>
           <p className="rise mt-8 max-w-xl text-xl leading-relaxed text-slate-600" style={{ animationDelay: '150ms' }}>{hero.subtitle}</p>
           <div className="rise mt-10 flex flex-col gap-4 sm:flex-row sm:items-center" style={{ animationDelay: '300ms' }}>
@@ -74,6 +93,7 @@ export default function HomePage() {
             </a>
           </div>
         </div>
+        <Knight />
       </section>
 
       {/* 2. Proof: the four results */}
