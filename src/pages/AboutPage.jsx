@@ -24,27 +24,27 @@ export default function AboutPage() {
         {SITE_CONFIG.positioning}
       </PageHero>
 
-      <section className="py-20 sm:py-28">
-        <div className={`${wrap} grid gap-16 lg:grid-cols-2`}>
+      <section className="py-14 sm:py-20 lg:py-28">
+        <div className={`${wrap} grid gap-12 sm:gap-16 lg:grid-cols-2`}>
           <Reveal>
-            <h2 className="font-serif text-3xl text-navy-950 sm:text-4xl">
+            <h2 className="font-serif text-2xl text-navy-950 sm:text-4xl">
               Our structured approach has ensured these results for our clients
             </h2>
-            <ul className="mt-8 divide-y divide-navy-900/10 border-y border-navy-900/10">
+            <ul className="mt-6 sm:mt-8 divide-y divide-navy-900/10 border-y border-navy-900/10">
               {RESULTS.map((r) => (
-                <li key={r} className="py-4 font-medium text-navy-900">
+                <li key={r} className="py-3.5 sm:py-4 text-sm sm:text-base font-medium text-navy-900">
                   {r}
                 </li>
               ))}
             </ul>
           </Reveal>
           <Reveal delay={120}>
-            <h2 className="font-serif text-3xl text-navy-950 sm:text-4xl">
+            <h2 className="font-serif text-2xl text-navy-950 sm:text-4xl">
               Our team handholds the client to
             </h2>
-            <ol className="mt-8 divide-y divide-navy-900/10 border-y border-navy-900/10">
+            <ol className="mt-6 sm:mt-8 divide-y divide-navy-900/10 border-y border-navy-900/10">
               {ABOUT_BULLETS.map((b, i) => (
-                <li key={i} className="flex gap-4 py-4">
+                <li key={i} className="flex gap-3.5 py-3.5 sm:gap-4 sm:py-4 text-sm sm:text-base">
                   <span className="font-serif text-accent-600">{i + 1}.</span>
                   <span className="leading-relaxed text-slate-700">{b}</span>
                 </li>
@@ -54,9 +54,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section id="leadership" className="scroll-mt-24 border-t border-navy-900/10 bg-sand-100/60 py-20 sm:py-28">
+      <section id="leadership" className="scroll-mt-24 border-t border-navy-900/10 bg-sand-100/60 py-14 sm:py-20 lg:py-28">
         <div className={wrap}>
-          <Reveal className="grid items-start gap-12 lg:grid-cols-12 lg:gap-14">
+          <Reveal className="grid items-start gap-10 sm:gap-12 lg:grid-cols-12 lg:gap-14">
             {/* Left Column: Cohesive Bio, Quote, Credentials & Story Link */}
             <div className="lg:col-span-6 space-y-6">
               <div>

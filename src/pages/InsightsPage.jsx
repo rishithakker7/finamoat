@@ -176,15 +176,15 @@ export default function InsightsPage({ initialTab = 'All' }) {
           )}
 
           {/* WhatsApp Learning CTA */}
-          <div className="mt-20 flex flex-col items-start justify-between gap-5 rounded-3xl bg-sand-100 p-8 sm:flex-row sm:items-center">
-            <p className="font-serif text-xl text-navy-950">
+          <div className="mt-14 sm:mt-20 flex flex-col items-stretch justify-between gap-5 rounded-3xl bg-sand-100 p-6 sm:flex-row sm:items-center sm:p-8">
+            <p className="font-serif text-lg sm:text-xl text-navy-950">
               Get free articles on WhatsApp — send “Learning” to {SITE_CONFIG.phones[0].display}.
             </p>
             <a
               href={waLink(SITE_CONFIG.whatsappNumber, 'Learning')}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-navy-900 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-navy-800"
+              className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-full bg-navy-900 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-navy-800"
             >
               <img src="/icons/whatsapp.svg" alt="" className="h-4 w-4" />
               Send “Learning”
@@ -194,12 +194,12 @@ export default function InsightsPage({ initialTab = 'All' }) {
       </section>
 
       {/* Client Testimonials */}
-      <section className="bg-sand-100 py-20 sm:py-28">
+      <section className="bg-sand-100 py-14 sm:py-20 lg:py-28">
         <div className={wrap}>
-          <Reveal className="mb-12">
+          <Reveal className="mb-8 sm:mb-12">
             <h2 className="font-serif text-3xl text-navy-950 sm:text-5xl">What our clients say</h2>
           </Reveal>
-          <div className="grid gap-12 md:grid-cols-3">
+          <div className="grid gap-8 sm:gap-12 md:grid-cols-3">
             {TESTIMONIALS.map((t, i) => (
               <Reveal key={t.id} delay={i * 100}>
                 <p className="font-serif text-lg leading-relaxed text-navy-950">“{t.quote}”</p>

@@ -32,7 +32,7 @@ function Knight() {
   };
   return (
     <div
-      className="pointer-events-none relative mx-auto mb-12 mt-2 h-[280px] w-[280px] sm:h-[360px] sm:w-[360px] lg:absolute lg:-right-10 lg:top-6 lg:my-0 lg:h-[520px] lg:w-[520px]"
+      className="pointer-events-none relative mx-auto mb-10 mt-2 h-[260px] w-[260px] sm:h-[340px] sm:w-[340px] lg:absolute lg:-right-10 lg:top-6 lg:my-0 lg:h-[520px] lg:w-[520px]"
       aria-hidden="true"
     >
       <div className="absolute inset-0 rounded-full border border-navy-900/10" />
@@ -73,17 +73,32 @@ export default function HomePage() {
 
       {/* 1. Hero: one message, one action */}
       <section className="relative overflow-hidden">
-        <div className={`${wrap} relative pt-14 pb-6 sm:pt-20 sm:pb-10 lg:pt-32 lg:pb-32`}>
-          <h1 className="rise max-w-4xl font-serif text-5xl leading-[1.03] tracking-tight text-navy-950 sm:text-7xl lg:text-[84px]">{hero.title}</h1>
-          <p className="rise mt-8 max-w-xl text-xl leading-relaxed text-slate-600" style={{ animationDelay: '150ms' }}>{hero.subtitle}</p>
-          <div className="rise mt-10 flex flex-col gap-4 sm:flex-row sm:items-center" style={{ animationDelay: '300ms' }}>
+        <div className={`${wrap} relative pt-10 pb-6 sm:pt-20 sm:pb-10 lg:pt-32 lg:pb-32`}>
+          <h1 className="rise max-w-4xl font-serif text-4xl leading-[1.06] tracking-tight text-navy-950 sm:text-6xl lg:text-[84px]">
+            {hero.title}
+          </h1>
+          <p
+            className="rise mt-5 sm:mt-8 max-w-xl text-base sm:text-xl leading-relaxed text-slate-600"
+            style={{ animationDelay: '150ms' }}
+          >
+            {hero.subtitle}
+          </p>
+          <div
+            className="rise mt-8 sm:mt-10 flex flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:gap-4"
+            style={{ animationDelay: '300ms' }}
+          >
             <Link to="/check-up" className={btnPrimary}>
               Book a free finance check-up
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
-            <span className="text-sm font-medium text-slate-500">or</span>
+            <span className="text-center text-xs sm:text-sm font-medium text-slate-400">
+              or
+            </span>
             <a
-              href={waLink(SITE_CONFIG.whatsappNumber, 'Hi Finamoat, I would like to book a Free Business Finance Check-up for my business.')}
+              href={waLink(
+                SITE_CONFIG.whatsappNumber,
+                'Hi Finamoat, I would like to book a Free Business Finance Check-up for my business.'
+              )}
               target="_blank"
               rel="noreferrer"
               className={btnGhost}
@@ -100,28 +115,48 @@ export default function HomePage() {
       <section className="border-y border-navy-900/10">
         <div className={`${wrap} grid grid-cols-2 lg:grid-cols-4`}>
           {IMPACT_STATS.map((s, i) => (
-            <Reveal key={i} delay={i * 90} className={`py-10 pr-6 lg:py-14 ${i > 0 ? 'lg:border-l lg:border-navy-900/10 lg:pl-8' : ''}`}>
-              <div className="font-serif text-5xl text-navy-950 sm:text-6xl"><CountUp value={s.value} /></div>
-              <div className="mt-3 text-sm font-semibold text-navy-900">{s.label}</div>
+            <Reveal
+              key={i}
+              delay={i * 90}
+              className={`py-7 sm:py-10 lg:py-14 ${
+                i >= 2 ? 'border-t border-navy-900/10 lg:border-t-0' : ''
+              } ${
+                i % 2 === 1
+                  ? 'border-l border-navy-900/10 pl-5 sm:pl-8'
+                  : 'pr-4 sm:pr-6'
+              } ${i > 0 ? 'lg:border-l lg:border-navy-900/10 lg:pl-8' : ''}`}
+            >
+              <div className="font-serif text-4xl text-navy-950 sm:text-5xl lg:text-6xl">
+                <CountUp value={s.value} />
+              </div>
+              <div className="mt-2 sm:mt-3 text-xs sm:text-sm font-semibold text-navy-900">
+                {s.label}
+              </div>
             </Reveal>
           ))}
         </div>
       </section>
 
       {/* 3. What we do */}
-      <section className="py-24 sm:py-32">
-        <div className={`${wrap} grid gap-14 lg:grid-cols-12`}>
+      <section className="py-16 sm:py-24 lg:py-32">
+        <div className={`${wrap} grid gap-10 sm:gap-14 lg:grid-cols-12`}>
           <Reveal className="lg:col-span-6">
-            <h2 className="font-serif text-4xl leading-tight text-navy-950 sm:text-5xl">We take charge of your finance function, so you can focus on growth.</h2>
-            <p className="mt-6 max-w-lg leading-relaxed text-slate-600">{SITE_CONFIG.positioning}</p>
-            <div className="mt-8"><More to="/about">Meet CA Vikram Menda & the team</More></div>
+            <h2 className="font-serif text-3xl leading-tight text-navy-950 sm:text-5xl">
+              We take charge of your finance function, so you can focus on growth.
+            </h2>
+            <p className="mt-4 sm:mt-6 max-w-lg text-sm sm:text-base leading-relaxed text-slate-600">
+              {SITE_CONFIG.positioning}
+            </p>
+            <div className="mt-6 sm:mt-8">
+              <More to="/about">Meet CA Vikram Menda & the team</More>
+            </div>
           </Reveal>
           <Reveal delay={120} className="lg:col-span-6">
             <ul className="divide-y divide-navy-900/10 border-y border-navy-900/10">
               {ABOUT_BULLETS.map((b, i) => (
-                <li key={i} className="flex gap-4 py-5">
+                <li key={i} className="flex gap-3.5 py-4 sm:gap-4 sm:py-5">
                   <Check className="mt-1 h-4 w-4 flex-shrink-0 text-accent-600" />
-                  <span className="leading-relaxed text-navy-900">{b}</span>
+                  <span className="text-sm sm:text-base leading-relaxed text-navy-900">{b}</span>
                 </li>
               ))}
             </ul>
@@ -130,19 +165,26 @@ export default function HomePage() {
       </section>
 
       {/* 4. Services, grouped into four lines instead of ten cards */}
-      <section className="bg-sand-100 py-24 sm:py-32">
+      <section className="bg-sand-100 py-16 sm:py-24 lg:py-32">
         <div className={wrap}>
-          <Reveal className="mb-12 flex items-end justify-between gap-6">
-            <h2 className="font-serif text-4xl text-navy-950 sm:text-5xl">How we help</h2>
+          <Reveal className="mb-8 sm:mb-12 flex flex-wrap items-baseline justify-between gap-4">
+            <h2 className="font-serif text-3xl text-navy-950 sm:text-5xl">How we help</h2>
             <More to="/services">All 10 services</More>
           </Reveal>
           <ul className="border-t border-navy-900/15">
             {CATEGORIES.map((c, i) => (
               <Reveal as="li" key={c} delay={i * 70} className="border-b border-navy-900/15">
-                <Link to="/services" className="group grid gap-2 py-7 hover-row md:grid-cols-12 md:gap-8">
-                  <h3 className="font-serif text-2xl text-navy-950 md:col-span-4">{c}</h3>
-                  <p className="leading-relaxed text-slate-600 md:col-span-8">
-                    {SERVICES.filter((s) => s.category === c).map((s) => s.title).join(' · ')}
+                <Link
+                  to="/services"
+                  className="group grid gap-2 py-5 sm:py-7 hover-row md:grid-cols-12 md:gap-8"
+                >
+                  <h3 className="font-serif text-xl sm:text-2xl text-navy-950 md:col-span-4">
+                    {c}
+                  </h3>
+                  <p className="text-sm sm:text-base leading-relaxed text-slate-600 md:col-span-8">
+                    {SERVICES.filter((s) => s.category === c)
+                      .map((s) => s.title)
+                      .join(' · ')}
                   </p>
                 </Link>
               </Reveal>
@@ -152,19 +194,30 @@ export default function HomePage() {
       </section>
 
       {/* 5. Case studies: two, big numbers */}
-      <section className="py-24 sm:py-32">
+      <section className="py-16 sm:py-24 lg:py-32">
         <div className={wrap}>
-          <Reveal className="mb-12 flex items-end justify-between gap-6">
-            <h2 className="font-serif text-4xl text-navy-950 sm:text-5xl">Results we’ve delivered</h2>
+          <Reveal className="mb-8 sm:mb-12 flex flex-wrap items-baseline justify-between gap-4">
+            <h2 className="font-serif text-3xl text-navy-950 sm:text-5xl">
+              Results we’ve delivered
+            </h2>
             <More to="/case-studies">All case studies</More>
           </Reveal>
-          <div className="grid gap-12 lg:grid-cols-2">
+          <div className="grid gap-10 sm:gap-12 lg:grid-cols-2">
             {CASE_STUDIES.slice(0, 2).map((cs, i) => (
               <Reveal key={cs.id} delay={i * 120}>
-                <Link to={`/case-studies/${cs.slug}`} className="group block border-t border-navy-900 pt-6">
-                  <div className="font-serif text-6xl text-accent-600">{cs.headlineMetric}</div>
-                  <p className="mt-1 text-sm text-slate-500">{cs.headlineMetricLabel}</p>
-                  <h3 className="mt-6 font-serif text-2xl leading-snug text-navy-950"><span className="u-link">{cs.client}</span></h3>
+                <Link
+                  to={`/case-studies/${cs.slug}`}
+                  className="group block border-t border-navy-900 pt-5 sm:pt-6"
+                >
+                  <div className="font-serif text-5xl sm:text-6xl text-accent-600">
+                    {cs.headlineMetric}
+                  </div>
+                  <p className="mt-1 text-xs sm:text-sm text-slate-500">
+                    {cs.headlineMetricLabel}
+                  </p>
+                  <h3 className="mt-4 sm:mt-6 font-serif text-xl sm:text-2xl leading-snug text-navy-950">
+                    <span className="u-link">{cs.client}</span>
+                  </h3>
                 </Link>
               </Reveal>
             ))}
@@ -173,18 +226,29 @@ export default function HomePage() {
       </section>
 
       {/* 6. One closing action */}
-      <section className="bg-navy-900 py-24 text-white">
-        <div className={`${wrap} grid items-center gap-12 lg:grid-cols-2`}>
+      <section className="bg-navy-900 py-16 sm:py-24 text-white">
+        <div className={`${wrap} grid items-center gap-10 sm:gap-12 lg:grid-cols-2`}>
           <Reveal>
-            <h2 className="font-serif text-4xl leading-tight sm:text-5xl">Start with a free business finance check-up</h2>
-            <p className="mt-5 max-w-md leading-relaxed text-slate-300">
+            <h2 className="font-serif text-3xl leading-tight sm:text-5xl">
+              Start with a free business finance check-up
+            </h2>
+            <p className="mt-4 sm:mt-5 max-w-md text-sm sm:text-base leading-relaxed text-slate-300">
               Our experts review the financial systems in your business and give you an exhaustive “Report Card” of the tools & techniques you need.
             </p>
-            <div className="mt-8"><Link to="/check-up" className={btnGold}>Apply now <ArrowUpRight className="h-4 w-4" /></Link></div>
+            <div className="mt-6 sm:mt-8">
+              <Link to="/check-up" className={btnGold + ' w-full sm:w-auto'}>
+                Apply now <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
           </Reveal>
           <Reveal delay={120}>
             <ul className="divide-y divide-white/15 border-y border-white/15">
-              {CHECKUP_POINTS.map((p) => (<li key={p} className="flex gap-4 py-5"><Check className="mt-1 h-4 w-4 flex-shrink-0 text-accent-400" /><span className="text-slate-100">{p}</span></li>))}
+              {CHECKUP_POINTS.map((p) => (
+                <li key={p} className="flex gap-3.5 py-4 sm:gap-4 sm:py-5 text-sm sm:text-base">
+                  <Check className="mt-1 h-4 w-4 flex-shrink-0 text-accent-400" />
+                  <span className="text-slate-100">{p}</span>
+                </li>
+              ))}
             </ul>
           </Reveal>
         </div>

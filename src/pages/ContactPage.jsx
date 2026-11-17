@@ -56,9 +56,9 @@ export default function ContactPage() {
         Speak directly with CA Vikram Menda’s Shared CFO team by phone or WhatsApp, or send us a message below.
       </PageHero>
 
-      <section className="py-16 sm:py-24">
-        <div className={`${wrap} grid gap-16 lg:grid-cols-12`}>
-          <Reveal className="space-y-10 lg:col-span-5">
+      <section className="py-12 sm:py-20 lg:py-24">
+        <div className={`${wrap} grid gap-12 sm:gap-16 lg:grid-cols-12`}>
+          <Reveal className="space-y-8 sm:space-y-10 lg:col-span-5">
             <div>
               <h2 className="font-serif text-xl text-navy-950">{s.addresses.primary.label}</h2>
               <p className="mt-2 leading-relaxed text-slate-600">
@@ -100,7 +100,7 @@ export default function ContactPage() {
               )}
               target="_blank"
               rel="noreferrer"
-              className={btnPrimary + ' !bg-emerald-700 hover:!bg-emerald-600'}
+              className={btnPrimary + ' w-full sm:w-auto !bg-emerald-700 hover:!bg-emerald-600'}
             >
               <img src="/icons/whatsapp.svg" alt="" className="h-4 w-4" />
               WhatsApp Us
@@ -190,18 +190,20 @@ export default function ContactPage() {
                   value={f.message}
                   onChange={set('message')}
                 />
-                <button className={btnPrimary}>Submit & request consultation</button>
+                <button className={btnPrimary + ' w-full sm:w-auto'}>
+                  Submit & request consultation
+                </button>
               </form>
             )}
           </Reveal>
         </div>
         {s.mapEmbedUrl && (
-          <div className={`${wrap} mt-20`}>
+          <div className={`${wrap} mt-12 sm:mt-20`}>
             <iframe
               title="Finamoat office on Google Maps"
               src={s.mapEmbedUrl}
               loading="lazy"
-              className="h-80 w-full rounded-3xl border-0 grayscale transition duration-500 hover:grayscale-0"
+              className="h-64 sm:h-80 w-full rounded-3xl border-0 grayscale transition duration-500 hover:grayscale-0"
             />
           </div>
         )}

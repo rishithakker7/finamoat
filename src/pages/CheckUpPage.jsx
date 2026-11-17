@@ -93,8 +93,8 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
           : 'Our experts conduct an in-depth check-up of the existing systems in your business. You get an exhaustive “Report Card” of specific tools & techniques required for better financial management.'}
       </PageHero>
 
-      <section className="py-16 sm:py-24">
-        <div className={`${wrap} grid gap-16 lg:grid-cols-12`}>
+      <section className="py-12 sm:py-20 lg:py-24">
+        <div className={`${wrap} grid gap-12 sm:gap-16 lg:grid-cols-12`}>
           {/* Form first on mobile */}
           <Reveal className="lg:order-2 lg:col-span-5">
             <div className="lg:sticky lg:top-28">
@@ -103,19 +103,19 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
                   <CheckCircle2 className="h-10 w-10 text-emerald-600" />
                   <h2 className="mt-5 font-serif text-3xl text-navy-950">Application confirmed</h2>
                   <p className="mt-3 leading-relaxed text-slate-600">
-                    Thank you, <strong>{form.name}</strong> from {form.city}. CA Vikram Menda’s advisory desk has received your request and will contact you on <span className="font-mono">{form.phone}</span>.
+                    Thank you, <strong>{form.name}</strong> from {form.city}. CA Vikram Menda’s advisory desk has received your request and will contact you on <span className="tabular-nums font-medium">{form.phone}</span>.
                   </p>
                   {answered > 0 && <p className="mt-3 text-sm text-accent-600">Preliminary health score attached: {total}/100</p>}
                   <a
                     href={waLink(SITE_CONFIG.whatsappNumber, `Hi Finamoat, I am ${form.name} (${form.city}). I just applied for the Free Business Finance Check-up on your website.${answered > 0 ? ` My preliminary health score is ${total}/100.` : ''}`)}
                     target="_blank" rel="noreferrer"
-                    className="mt-8 inline-flex items-center gap-2 rounded-full bg-emerald-700 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-emerald-600"
+                    className="mt-8 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-emerald-700 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-emerald-600"
                   >
-                    <MessageCircle className="h-4 w-4" /> Fast-track on WhatsApp
+                    <img src="/icons/whatsapp.svg" alt="" className="h-4 w-4" /> WhatsApp Us
                   </a>
                 </div>
               ) : (
-                <form onSubmit={submit} className="space-y-4 rounded-3xl bg-sand-100 p-7 sm:p-8">
+                <form onSubmit={submit} className="space-y-4 rounded-3xl bg-sand-100 p-6 sm:p-8">
                   <h2 className="font-serif text-2xl text-navy-950">{isSubscribeMode ? 'Subscribe for latest articles' : 'Book your free finance check-up'}</h2>
                   <input type="text" tabIndex={-1} autoComplete="off" className="hidden" value={form.honeypot} onChange={set('honeypot')} />
                   <input required placeholder="Full name *" className={inputCls} value={form.name} onChange={set('name')} />

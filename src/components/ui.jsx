@@ -78,10 +78,10 @@ export function CountUp({ value, duration = 1400 }) {
 export function PageHero({ title, children }) {
   return (
     <section className="border-b border-navy-900/10">
-      <div className={`${wrap} pt-16 pb-14 sm:pt-24 sm:pb-20`}>
-        <h1 className="rise font-serif text-4xl sm:text-6xl leading-[1.05] tracking-tight text-navy-950 max-w-4xl">{title}</h1>
+      <div className={`${wrap} pt-10 pb-10 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20`}>
+        <h1 className="rise font-serif text-3xl sm:text-5xl lg:text-6xl leading-[1.08] tracking-tight text-navy-950 max-w-4xl">{title}</h1>
         {children && (
-          <p className="rise mt-6 max-w-2xl text-lg leading-relaxed text-slate-600" style={{ animationDelay: '150ms' }}>
+          <p className="rise mt-4 sm:mt-6 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600" style={{ animationDelay: '150ms' }}>
             {children}
           </p>
         )}

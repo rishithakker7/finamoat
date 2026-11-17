@@ -72,7 +72,7 @@ export default function ServicesPage() {
                             {s.deliverables.map((d) => (<li key={d} className="flex gap-3 text-sm text-slate-700"><Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent-600" />{d}</li>))}
                           </ul>
                           <p className="mt-6 font-serif text-lg leading-snug text-navy-950">{s.outcome}</p>
-                          <div className="mt-6 flex flex-wrap items-center gap-4">
+                          <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
                             <More to={`/check-up?service=${s.slug}`}>Request consultation</More>
                             <a
                               href={waLink(SITE_CONFIG.whatsappNumber, `Hi Finamoat, I would like to discuss Service #${s.id}: ${s.title}.`)}
