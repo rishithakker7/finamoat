@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
-import { Reveal, wrap, btnGold, inputCls } from '../components/ui';
-import { BLOG_ARTICLES, AUTHOR_SIGNATURE } from '../data/finamoatData';
+import { Reveal, wrap, btnGold, inputCls, sendEnquiryEmail } from '../components/ui';
+import { BLOG_ARTICLES, AUTHOR_SIGNATURE, SITE_CONFIG } from '../data/finamoatData';
 
 function Block({ b }) {
   switch (b.type) {
@@ -52,6 +52,13 @@ export default function ArticleDetailPage({ forcedSlug = null }) {
     e.preventDefault();
     if (form.honeypot) return;
     setLocal([...local, { author: form.name, date: 'Just now', text: form.comment, isNew: true }]);
+    sendEnquiryEmail(SITE_CONFIG.email, `New Blog Comment on "${article.title}" — ${form.name}`, {
+      'Enquiry Type': 'Article Comment',
+      Article: article.title,
+      Name: form.name,
+      Email: form.email,
+      Comment: form.comment,
+    });
     setForm({ name: '', email: '', comment: '', honeypot: '' });
   };
 

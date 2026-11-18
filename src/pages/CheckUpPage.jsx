@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
-import { PageHero, Reveal, wrap, btnGold, inputCls, waLink } from '../components/ui';
+import { PageHero, Reveal, wrap, btnGold, inputCls, waLink, sendEnquiryEmail } from '../components/ui';
 import { SITE_CONFIG } from '../data/finamoatData';
 
 const DIAGNOSTIC_QUESTIONS = [
@@ -62,6 +62,7 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
     notes: preselected ? `Interested in: ${preselected}` : '', honeypot: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
 
   const answered = Object.keys(answers).length;
   const total = Object.values(answers).reduce((a, v) => a + v, 0);
@@ -74,9 +75,24 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
       ? { label: 'Growth stage — ready for 10-point MIS & systems', text: 'You have foundational operations in place, but transitioning to Daily MIS Scorecards, GST/TDS ring-fencing, and the Promoter-CEO model will accelerate your annual growth trajectory.' }
       : { label: 'Strong foundation — ready for orbital scale & M&A', text: 'Your financial discipline is strong. Our Capital Allocation, Valuation, and PE/VC Fundraising practice can help you scale nationally or optimize promoter wealth.' };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (form.honeypot) return;
+    if (form.honeypot || sending) return;
+    setSending(true);
+    const subject = isSubscribeMode
+      ? `New Article Subscription — ${form.name} (${form.city})`
+      : `New Free Finance Check-up Application — ${form.name} (${form.city})`;
+    await sendEnquiryEmail(SITE_CONFIG.email, subject, {
+      'Enquiry Type': isSubscribeMode ? 'Article Subscription' : 'Free Business Finance Check-up',
+      'Full Name': form.name,
+      Email: form.email,
+      City: form.city,
+      'Phone / WhatsApp': form.phone,
+      'Preferred Call Date': form.preferredDate || 'Not specified',
+      'Key Focus Area': form.notes || 'Not specified',
+      'Preliminary Health Score': answered > 0 ? `${total}/100 (${band.label})` : 'Not taken',
+    });
+    setSending(false);
     setSubmitted(true);
   };
 
@@ -126,8 +142,13 @@ export default function CheckUpPage({ isSubscribeMode = false }) {
                     <input type="date" className={inputCls} value={form.preferredDate} onChange={set('preferredDate')} />
                   </div>
                   {!isSubscribeMode && <input placeholder="Key focus area (cashflow, MIS, fundraising…)" className={inputCls} value={form.notes} onChange={set('notes')} />}
-                  <button className={btnGold + ' w-full'}>
-                    {isSubscribeMode ? 'Subscribe now' : 'Submit & request free check-up'} <ArrowRight className="h-4 w-4 transition-transform duration-200 ease-out-strong group-hover:translate-x-1" />
+                  <button disabled={sending} className={btnGold + ' w-full disabled:opacity-60'}>
+                    {sending
+                      ? 'Sending enquiry…'
+                      : isSubscribeMode
+                      ? 'Subscribe now'
+                      : 'Submit & request free check-up'}{' '}
+                    <ArrowRight className="h-4 w-4 transition-transform duration-200 ease-out-strong group-hover:translate-x-1" />
                   </button>
                   <p className="text-center text-xs text-slate-500">We respect your privacy. Your financial information is 100% confidential.</p>
                 </form>

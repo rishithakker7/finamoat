@@ -149,3 +149,36 @@ export function Accordion({ items, defaultOpen = 0 }) {
 }
 
 export const waLink = (number, text) => `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+
+export const mailtoLink = (email, subject, fields) => {
+  const body = Object.entries(fields)
+    .filter(([, v]) => v !== undefined && v !== null && String(v).trim() !== '')
+    .map(([k, v]) => `${k}: ${v}`)
+    .join('\n');
+  return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+};
+
+export async function sendEnquiryEmail(email, subject, fields) {
+  const payload = {
+    _subject: subject,
+    _template: 'table',
+    _captcha: 'false',
+    ...fields,
+  };
+  try {
+    const res = await fetch(`https://formsubmit.co/ajax/${email}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error('FormSubmit non-200');
+    return true;
+  } catch {
+    // Fallback: open pre-filled mailto to finamoat@gmail.com if network/adblocker blocks AJAX
+    window.location.href = mailtoLink(email, subject, fields);
+    return false;
+  }
+}

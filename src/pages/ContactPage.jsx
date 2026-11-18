@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
-import { PageHero, Reveal, wrap, btnPrimary, inputCls, waLink } from '../components/ui';
+import { PageHero, Reveal, wrap, btnPrimary, inputCls, waLink, sendEnquiryEmail } from '../components/ui';
 import { SITE_CONFIG } from '../data/finamoatData';
 
 const MODES = [
@@ -43,7 +43,25 @@ export default function ContactPage() {
     honeypot: '',
   });
   const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (f.honeypot || sending) return;
+    setSending(true);
+    await sendEnquiryEmail(s.email, `New Consultation Enquiry — ${f.name}`, {
+      'Enquiry Type': 'Contact & Consultation Request',
+      'Full Name': f.name,
+      Email: f.email,
+      'Phone / WhatsApp': f.phone,
+      'Meeting Format': mode,
+      'Preferred Date': f.date || 'Not specified',
+      Message: f.message,
+    });
+    setSending(false);
+    setDone(true);
+  };
 
   return (
     <>
@@ -132,10 +150,7 @@ export default function ContactPage() {
               </div>
             ) : (
               <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (!f.honeypot) setDone(true);
-                }}
+                onSubmit={handleSubmit}
                 className="space-y-8"
               >
                 <h2 className="font-serif text-3xl text-navy-950">Send us a message</h2>
@@ -190,8 +205,8 @@ export default function ContactPage() {
                   value={f.message}
                   onChange={set('message')}
                 />
-                <button className={btnPrimary + ' w-full sm:w-auto'}>
-                  Submit & request consultation
+                <button disabled={sending} className={btnPrimary + ' w-full sm:w-auto disabled:opacity-60'}>
+                  {sending ? 'Sending enquiry…' : 'Submit & request consultation'}
                 </button>
               </form>
             )}
