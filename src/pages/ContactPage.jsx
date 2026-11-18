@@ -67,7 +67,7 @@ export default function ContactPage() {
     <>
       <SEOHead
         title="Contact Us & Book a Consultation | Finamoat Mulund West, Mumbai"
-        description="Reach Finamoat Services at M.G. Road, Mulund West, Mumbai 400080. Call +91 80706 00909 / +91 80706 00505 or book a Shared CFO consultation online."
+        description="Reach Finamoat at 401D, Flying Colors Premises DD, Dindayal Upadhyay Marg, above Platinum Hospital, Mulund West, Mumbai, Maharashtra 400604. Call +91 80706 00909 / +91 80706 00505 or book a Shared CFO consultation online."
         canonicalPath="/contact"
       />
       <PageHero title="Contact us & schedule your consultation">

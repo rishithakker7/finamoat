@@ -40,9 +40,9 @@
 ---
 
 ## Address Configuration (Single Source of Truth)
-Both addresses from the legacy site are configured in `src/data/finamoatData.js` under `SITE_CONFIG.addresses`:
-- **Primary**: `32, Kappeesh Mall, M.G. Road, Mulund West, Mumbai – 400080`
-- **Corporate Suite / Annex**: `B-204, Pranav Commercial Plaza, M.G. Road, Mulund West, Mumbai – 400080`
+Configured in `src/data/finamoatData.js` under `SITE_CONFIG.addresses.primary`:
+- **Office Address**: `401D, Flying Colors Premises DD, Dindayal Upadhyay Marg, above Platinum Hospital, Mulund West, Mumbai, Maharashtra 400604`
+- **Google Maps**: https://maps.app.goo.gl/RLVh89DTFAvTZU8g6
 
 ---
 

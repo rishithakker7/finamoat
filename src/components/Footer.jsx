@@ -77,7 +77,7 @@ export default function Footer() {
               </p>
               <p>
                 <a
-                  href={`https://www.google.com/maps?ll=${s.coordinates.lat},${s.coordinates.lng}&z=15`}
+                  href={s.mapUrl}
                   target="_blank"
                   rel="noreferrer"
                   className={link}

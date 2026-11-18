@@ -71,10 +71,11 @@ export default function SEOHead({
     },
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '32, Kappeesh Mall, M.G. Road, Mulund West',
+      streetAddress:
+        '401D, Flying Colors Premises DD, Dindayal Upadhyay Marg, above Platinum Hospital, Mulund West',
       addressLocality: 'Mumbai',
       addressRegion: 'Maharashtra',
-      postalCode: '400080',
+      postalCode: '400604',
       addressCountry: 'IN',
     },
     geo: {

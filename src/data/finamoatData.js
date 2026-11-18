@@ -15,27 +15,23 @@ export const SITE_CONFIG = {
   ],
   whatsappNumber: '918070600909',
   email: 'finamoat@gmail.com',
-  // Unified address config (resolves the inconsistency between Kappeesh Mall and Pranav Commercial Plaza)
+  // Official office address in Mulund West, Mumbai
   addresses: {
     primary: {
       label: 'Registered Advisory Office (Mulund West)',
-      line1: '32, Kappeesh Mall, M.G. Road',
-      line2: 'Mulund West, Mumbai – 400080, Maharashtra, India',
-      short: '32, Kappeesh Mall, M.G. Road, Mulund West, Mumbai 400080',
-    },
-    annex: {
-      label: 'Operations & Practice Suite',
-      line1: 'B-204, Pranav Commercial Plaza, M.G. Road',
-      line2: 'Mulund West, Mumbai – 400080, Maharashtra, India',
-      short: 'B-204, Pranav Commercial Plaza, M.G. Road, Mulund West, Mumbai 400080',
+      line1: '401D, Flying Colors Premises DD, Dindayal Upadhyay Marg',
+      line2: 'above Platinum Hospital, Mulund West, Mumbai, Maharashtra 400604',
+      short:
+        '401D, Flying Colors Premises DD, Dindayal Upadhyay Marg, above Platinum Hospital, Mulund West, Mumbai, Maharashtra 400604',
     },
   },
   coordinates: {
-    lat: 19.174113,
-    lng: 72.954589,
+    lat: 19.1813134,
+    lng: 72.9546478,
   },
+  mapUrl: 'https://maps.app.goo.gl/RLVh89DTFAvTZU8g6',
   mapEmbedUrl:
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3768.48246648789!2d72.9524001149066!3d19.174118453863652!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b946a245c649%3A0xda349bfa1b04e251!2sFinamoat%20Services!5e0!3m2!1sen!2sin!4v1575110000606!5m2!1sen!2sin',
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3768.2995!2d72.9520729!3d19.1813134!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b9619ed506c5%3A0xbefd7d925c23bcc4!2sFinamoat%20Investments%20%26%20Tax%20Experts!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin',
   youtubePlaylistEmbed: 'https://www.youtube.com/embed/videoseries?list=PLkX2N3B7oGrBH9gk-AIr79Y2YXK9moblE&playsinline=1&rel=0',
   youtubeVideoEmbed: 'https://www.youtube.com/embed/JORpTNTWQAs?playsinline=1&rel=0',
   socials: {
@@ -666,7 +662,7 @@ export const FAQS = [
   {
     question: 'Where is Finamoat located and do you serve clients outside Mumbai?',
     answer:
-      'Our headquarters are on M.G. Road, Mulund West, Mumbai (400080). We work hands-on with businesses across Mumbai, Thane, Navi MMR, Pune, and pan-India through a hybrid of on-site deployments and cloud-enabled executive MIS reviews.',
+      'Our headquarters are at 401D, Flying Colors Premises DD, Dindayal Upadhyay Marg, above Platinum Hospital, Mulund West, Mumbai, Maharashtra 400604. We work hands-on with businesses across Mumbai, Thane, Navi MMR, Pune, and pan-India through a hybrid of on-site deployments and cloud-enabled executive MIS reviews.',
   },
 ];
 
