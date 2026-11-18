@@ -18,8 +18,8 @@ export default function CaseStudyDetailPage({ forcedSlug = null }) {
 
       <section className="border-b border-navy-900/10">
         <div className={`${wrap} max-w-4xl pt-14 pb-14 sm:pt-20`}>
-          <Link to="/case-studies" className="rise inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors duration-150 hover:text-navy-900">
-            <ArrowLeft className="h-4 w-4" /> All case studies
+          <Link to="/case-studies" className="rise inline-flex items-center gap-2 rounded-full border border-navy-900/20 bg-white px-4 py-2 text-xs font-semibold text-navy-900 transition-[background-color,border-color,transform] duration-200 ease-out-strong hover:border-navy-900 hover:-translate-y-0.5 active:scale-[0.97] active:duration-100">
+            <ArrowLeft className="h-3.5 w-3.5" /> All case studies
           </Link>
           <p className="rise mt-8 text-sm text-slate-500" style={{ animationDelay: '60ms' }}>{cs.industry} · {cs.date}</p>
           <h1 className="rise mt-3 font-serif text-4xl leading-[1.1] text-navy-950 sm:text-5xl" style={{ animationDelay: '120ms' }}>{cs.title}</h1>

@@ -60,8 +60,8 @@ export default function ArticleDetailPage({ forcedSlug = null }) {
       <SEOHead title={`${article.title} — By CA Vikram Menda`} description={article.excerpt} canonicalPath={`/insights/${article.slug}`} type="article" articleData={article} />
 
       <header className={`${wrap} max-w-3xl pt-14 pb-10 sm:pt-20`}>
-        <Link to="/insights" className="rise inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors duration-150 hover:text-navy-900">
-          <ArrowLeft className="h-4 w-4" /> All insights
+        <Link to="/insights" className="rise inline-flex items-center gap-2 rounded-full border border-navy-900/20 bg-white px-4 py-2 text-xs font-semibold text-navy-900 transition-[background-color,border-color,transform] duration-200 ease-out-strong hover:border-navy-900 hover:-translate-y-0.5 active:scale-[0.97] active:duration-100">
+          <ArrowLeft className="h-3.5 w-3.5" /> All insights
         </Link>
         <p className="rise mt-8 text-sm text-slate-500" style={{ animationDelay: '60ms' }}>{article.date} · {article.readTime} · {article.author}</p>
         <h1 className="rise mt-3 font-serif text-4xl leading-[1.1] tracking-tight text-navy-950 sm:text-6xl" style={{ animationDelay: '120ms' }}>{article.title}</h1>

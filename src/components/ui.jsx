@@ -100,12 +100,12 @@ export function PageHero({ title, children }) {
   );
 }
 
-export function More({ to, href, children }) {
-  const cls = 'group inline-flex items-center gap-1.5 text-sm font-semibold text-navy-900';
+export function More({ to, href, children, className = '' }) {
+  const cls = `${btnPrimary} ${className}`;
   const inner = (
     <>
-      <span className="u-link">{children}</span>
-      <ArrowUpRight className="h-4 w-4 transition-transform duration-200 ease-out-strong group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+      <span>{children}</span>
+      <ArrowUpRight className="h-4 w-4 flex-shrink-0 transition-transform duration-200 ease-out-strong group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
     </>
   );
   return href ? (
